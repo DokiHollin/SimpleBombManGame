@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Enemy.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Demolition</a> &gt; <a href="index.source.html" class="el_package">demolition</a> &gt; <span class="el_source">Enemy.java</span></div><h1>Enemy.java</h1><pre class="source lang-java linenums">package demolition;
+
+import processing.core.PApplet;
+import processing.core.PImage;
+
+public class Enemy implements PlayerLife{
+    protected int x;
+    protected int y;
+    protected PImage sprite;
+    protected boolean isAlive;
+    protected int moveSpeed;
+
+<span class="fc" id="L13">    protected int timeCounter = 0;</span>
+    protected int EnemyLife;
+
+    public void setPEnemyLife(int EnemyLife) {
+<span class="nc" id="L17">        this.EnemyLife = EnemyLife;</span>
+<span class="nc" id="L18">    }</span>
+
+<span class="fc" id="L20">    public Enemy(int x, int y, PImage sprite){</span>
+<span class="fc" id="L21">        this.x = x;</span>
+<span class="fc" id="L22">        this.y = y;</span>
+<span class="fc" id="L23">        this.sprite = sprite;</span>
+<span class="fc" id="L24">        this.moveSpeed = 32;</span>
+<span class="fc" id="L25">        this.isAlive = true;</span>
+<span class="fc" id="L26">        this.EnemyLife = 1;</span>
+<span class="fc" id="L27">    }</span>
+
+    public void tick(){
+        
+<span class="nc" id="L31">    }</span>
+
+    public void draw(PApplet app){
+<span class="fc" id="L34">        app.image(this.sprite, this.x, this.y-getHeight()/2+8);</span>
+<span class="fc" id="L35">    }</span>
+
+    public int getHeight(){
+<span class="fc" id="L38">        return this.sprite.height;</span>
+    }
+
+    public int getWidth(){
+<span class="nc" id="L42">        return this.sprite.width;</span>
+    }
+
+    public void reduceEnemyLife(){
+<span class="nc" id="L46">        this.EnemyLife --;</span>
+<span class="nc" id="L47">    }</span>
+
+    public int getEnemyLife() {
+<span class="nc" id="L50">        return EnemyLife;</span>
+    }
+
+    public boolean isAlive(){
+<span class="fc" id="L54">        return this.isAlive;</span>
+    }
+
+    public void setSprite(PImage sprite) {
+<span class="fc" id="L58">        this.sprite = sprite;</span>
+<span class="fc" id="L59">    }</span>
+
+    public int getX(){
+<span class="fc" id="L62">        return this.x;</span>
+    }
+
+    public int getY(){
+<span class="fc" id="L66">        return this.y;</span>
+    }
+    
+    public void dead(){
+<span class="fc" id="L70">        this.isAlive = false;</span>
+<span class="fc" id="L71">    }</span>
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

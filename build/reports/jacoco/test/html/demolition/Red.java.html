@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Red.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Demolition</a> &gt; <a href="index.source.html" class="el_package">demolition</a> &gt; <span class="el_source">Red.java</span></div><h1>Red.java</h1><pre class="source lang-java linenums">package demolition;
+
+import processing.core.PImage;
+import java.util.Random;
+
+public class Red extends Enemy{
+    private int facingDirection;
+    private Random rand;
+
+    public Red(int x, int y, PImage sprite) {
+<span class="fc" id="L11">        super(x, y, sprite);</span>
+<span class="fc" id="L12">        facingDirection = 0;</span>
+<span class="fc" id="L13">        this.rand = new Random();</span>
+<span class="fc" id="L14">        timeCounter = 0;</span>
+<span class="fc" id="L15">    }</span>
+
+    public void tick(){
+<span class="fc bfc" id="L18" title="All 2 branches covered.">        if (facingDirection == 0){</span>
+<span class="pc bpc" id="L19" title="1 of 2 branches missed.">            for (String each: App.mapObstacle.values()){</span>
+<span class="fc bfc" id="L20" title="All 2 branches covered.">                if ((String.valueOf(this.x)+String.valueOf(this.y + moveSpeed)).equals(each)){</span>
+<span class="fc" id="L21">                    facingDirection = rand.nextInt(4)+0; </span>
+                    while(true){
+<span class="fc bfc" id="L23" title="All 2 branches covered.">                        if (facingDirection == 1){</span>
+<span class="pc bpc" id="L24" title="2 of 4 branches missed.">                            if (App.mapInverseObstacle.get(String.valueOf(this.x - moveSpeed)+String.valueOf(this.y)).equals(&quot;broken&quot;) || App.mapInverseObstacle.get(String.valueOf(this.x - moveSpeed)+String.valueOf(this.y)).equals(&quot;solid&quot;)){</span>
+<span class="nc" id="L25">                                facingDirection = rand.nextInt(4)+0;</span>
+<span class="nc" id="L26">                                continue;</span>
+                            }else{
+<span class="fc" id="L28">                                return;</span>
+                            }
+<span class="fc bfc" id="L30" title="All 2 branches covered.">                        }else if (facingDirection == 3){</span>
+<span class="pc bpc" id="L31" title="2 of 4 branches missed.">                            if (App.mapInverseObstacle.get(String.valueOf(this.x + moveSpeed)+String.valueOf(this.y)).equals(&quot;broken&quot;) || App.mapInverseObstacle.get(String.valueOf(this.x + moveSpeed)+String.valueOf(this.y)).equals(&quot;solid&quot;)){</span>
+<span class="nc" id="L32">                                facingDirection = rand.nextInt(4)+0;</span>
+<span class="nc" id="L33">                                continue;</span>
+                            }else{
+<span class="fc" id="L35">                                return;</span>
+                            }
+<span class="fc bfc" id="L37" title="All 2 branches covered.">                        }else if (facingDirection == 2){</span>
+<span class="pc bpc" id="L38" title="2 of 4 branches missed.">                            if (App.mapInverseObstacle.get(String.valueOf(this.x)+String.valueOf(this.y - moveSpeed)).equals(&quot;broken&quot;) || App.mapInverseObstacle.get(String.valueOf(this.x)+String.valueOf(this.y - moveSpeed)).equals(&quot;solid&quot;)){</span>
+<span class="fc" id="L39">                                facingDirection = rand.nextInt(4)+0;</span>
+<span class="fc" id="L40">                                continue;</span>
+                            }else{
+<span class="nc" id="L42">                                return;</span>
+                            }
+                        }else{
+<span class="fc" id="L45">                            facingDirection = rand.nextInt(4)+0;</span>
+                        }
+
+                    }
+                }
+<span class="fc" id="L50">            }</span>
+<span class="nc" id="L51">            this.y += moveSpeed; </span>
+<span class="nc" id="L52">            App.moveTime = 0;   </span>
+            
+        }
+<span class="fc bfc" id="L55" title="All 2 branches covered.">        if (facingDirection == 1){</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">            for (String each: App.mapObstacle.values()){</span>
+<span class="pc bpc" id="L57" title="1 of 2 branches missed.">                if ((String.valueOf(this.x - moveSpeed)+String.valueOf(this.y)).equals(each)){</span>
+<span class="nc" id="L58">                    facingDirection = rand.nextInt(4)+0;            </span>
+                    while(true){
+<span class="nc bnc" id="L60" title="All 2 branches missed.">                        if (facingDirection == 0){</span>
+<span class="nc bnc" id="L61" title="All 4 branches missed.">                            if (App.mapInverseObstacle.get(String.valueOf(this.x)+String.valueOf(this.y + moveSpeed)).equals(&quot;broken&quot;) || App.mapInverseObstacle.get(String.valueOf(this.x)+String.valueOf(this.y + moveSpeed)).equals(&quot;solid&quot;)){</span>
+<span class="nc" id="L62">                                facingDirection = rand.nextInt(4)+0;</span>
+<span class="nc" id="L63">                                continue;</span>
+                            }else{
+<span class="nc" id="L65">                                return;</span>
+                            }
+<span class="nc bnc" id="L67" title="All 2 branches missed.">                        }else if (facingDirection == 3){</span>
+<span class="nc bnc" id="L68" title="All 4 branches missed.">                            if (App.mapInverseObstacle.get(String.valueOf(this.x + moveSpeed)+String.valueOf(this.y)).equals(&quot;broken&quot;) || App.mapInverseObstacle.get(String.valueOf(this.x + moveSpeed)+String.valueOf(this.y)).equals(&quot;solid&quot;)){</span>
+<span class="nc" id="L69">                                facingDirection = rand.nextInt(4)+0;</span>
+<span class="nc" id="L70">                                continue;</span>
+                            }else{
+<span class="nc" id="L72">                                return;</span>
+                            }
+<span class="nc bnc" id="L74" title="All 2 branches missed.">                        }else if (facingDirection == 2){</span>
+<span class="nc bnc" id="L75" title="All 4 branches missed.">                            if (App.mapInverseObstacle.get(String.valueOf(this.x)+String.valueOf(this.y - moveSpeed)).equals(&quot;broken&quot;) || App.mapInverseObstacle.get(String.valueOf(this.x)+String.valueOf(this.y - moveSpeed)).equals(&quot;solid&quot;)){</span>
+<span class="nc" id="L76">                                facingDirection = rand.nextInt(4)+0;</span>
+<span class="nc" id="L77">                                continue;</span>
+                            }else{
+<span class="nc" id="L79">                                return;</span>
+                            }
+                        }else{
+<span class="nc" id="L82">                            facingDirection = rand.nextInt(4)+0;</span>
+                        }
+
+                    }
+                }
+<span class="fc" id="L87">            }</span>
+<span class="fc" id="L88">            this.x -= moveSpeed;</span>
+<span class="fc" id="L89">            App.moveTime = 0;</span>
+        }
+<span class="fc bfc" id="L91" title="All 2 branches covered.">        if (facingDirection == 2){</span>
+<span class="pc bpc" id="L92" title="1 of 2 branches missed.">            for (String each: App.mapObstacle.values()){</span>
+<span class="fc bfc" id="L93" title="All 2 branches covered.">                if ((String.valueOf(this.x)+String.valueOf(this.y - moveSpeed)).equals(each)){</span>
+<span class="fc" id="L94">                    facingDirection = rand.nextInt(4)+0; </span>
+                    while(true){
+<span class="fc bfc" id="L96" title="All 2 branches covered.">                        if (facingDirection == 0){</span>
+<span class="pc bpc" id="L97" title="2 of 4 branches missed.">                            if (App.mapInverseObstacle.get(String.valueOf(this.x)+String.valueOf(this.y + moveSpeed)).equals(&quot;broken&quot;) || App.mapInverseObstacle.get(String.valueOf(this.x)+String.valueOf(this.y + moveSpeed)).equals(&quot;solid&quot;)){</span>
+<span class="fc" id="L98">                                facingDirection = rand.nextInt(4)+0;</span>
+<span class="fc" id="L99">                                continue;</span>
+                            }else{
+<span class="nc" id="L101">                                return;</span>
+                            }
+<span class="pc bpc" id="L103" title="1 of 2 branches missed.">                        }else if (facingDirection == 1){</span>
+<span class="pc bpc" id="L104" title="2 of 4 branches missed.">                            if (App.mapInverseObstacle.get(String.valueOf(this.x - moveSpeed)+String.valueOf(this.y)).equals(&quot;broken&quot;) || App.mapInverseObstacle.get(String.valueOf(this.x - moveSpeed)+String.valueOf(this.y)).equals(&quot;solid&quot;)){</span>
+<span class="nc" id="L105">                                facingDirection = rand.nextInt(4)+0;</span>
+<span class="nc" id="L106">                                continue;</span>
+                            }else{
+<span class="fc" id="L108">                                return;</span>
+                            }
+<span class="nc bnc" id="L110" title="All 2 branches missed.">                        }else if (facingDirection == 3){</span>
+<span class="nc bnc" id="L111" title="All 4 branches missed.">                            if (App.mapInverseObstacle.get(String.valueOf(this.x + moveSpeed)+String.valueOf(this.y)).equals(&quot;broken&quot;) || App.mapInverseObstacle.get(String.valueOf(this.x + moveSpeed)+String.valueOf(this.y)).equals(&quot;solid&quot;)){</span>
+<span class="nc" id="L112">                                facingDirection = rand.nextInt(4)+0;</span>
+<span class="nc" id="L113">                                continue;</span>
+                            }else{
+<span class="nc" id="L115">                                return;</span>
+                            }
+                        }else{
+<span class="nc" id="L118">                            facingDirection = rand.nextInt(4)+0;</span>
+                        }
+
+                    }
+                }
+<span class="fc" id="L123">            }</span>
+<span class="nc" id="L124">            this.y -= moveSpeed;</span>
+<span class="nc" id="L125">            App.moveTime = 0;</span>
+        }
+<span class="fc bfc" id="L127" title="All 2 branches covered.">        if (facingDirection == 3){</span>
+<span class="fc bfc" id="L128" title="All 2 branches covered.">            for (String each: App.mapObstacle.values()){</span>
+<span class="fc bfc" id="L129" title="All 2 branches covered.">                if ((String.valueOf(this.x + moveSpeed)+String.valueOf(this.y)).equals(each)){</span>
+<span class="fc" id="L130">                    facingDirection = rand.nextInt(4)+0;</span>
+                    while(true){
+<span class="fc bfc" id="L132" title="All 2 branches covered.">                        if (facingDirection == 0){</span>
+<span class="pc bpc" id="L133" title="2 of 4 branches missed.">                            if (App.mapInverseObstacle.get(String.valueOf(this.x)+String.valueOf(this.y + moveSpeed)).equals(&quot;broken&quot;) || App.mapInverseObstacle.get(String.valueOf(this.x)+String.valueOf(this.y + moveSpeed)).equals(&quot;solid&quot;)){</span>
+<span class="fc" id="L134">                                facingDirection = rand.nextInt(4)+0;</span>
+<span class="fc" id="L135">                                continue;</span>
+                            }else{
+<span class="nc" id="L137">                                return;</span>
+                            }
+<span class="fc bfc" id="L139" title="All 2 branches covered.">                        }else if (facingDirection == 1){</span>
+<span class="pc bpc" id="L140" title="2 of 4 branches missed.">                            if (App.mapInverseObstacle.get(String.valueOf(this.x - moveSpeed)+String.valueOf(this.y)).equals(&quot;broken&quot;) || App.mapInverseObstacle.get(String.valueOf(this.x - moveSpeed)+String.valueOf(this.y)).equals(&quot;solid&quot;)){</span>
+<span class="nc" id="L141">                                facingDirection = rand.nextInt(4)+0;</span>
+<span class="nc" id="L142">                                continue;</span>
+                            }else{
+<span class="fc" id="L144">                                return;</span>
+                            }
+<span class="fc bfc" id="L146" title="All 2 branches covered.">                        }else if (facingDirection == 2){</span>
+<span class="pc bpc" id="L147" title="2 of 4 branches missed.">                            if (App.mapInverseObstacle.get(String.valueOf(this.x)+String.valueOf(this.y - moveSpeed)).equals(&quot;broken&quot;) || App.mapInverseObstacle.get(String.valueOf(this.x)+String.valueOf(this.y - moveSpeed)).equals(&quot;solid&quot;)){</span>
+<span class="fc" id="L148">                                facingDirection = rand.nextInt(4)+0;</span>
+<span class="fc" id="L149">                                continue;</span>
+                            }else{
+<span class="nc" id="L151">                                return;</span>
+                            }
+                        }else{
+<span class="fc" id="L154">                            facingDirection = rand.nextInt(4)+0;</span>
+                        }
+
+                    } 
+                }
+<span class="fc" id="L159">            }</span>
+<span class="fc" id="L160">            this.x += moveSpeed;</span>
+<span class="fc" id="L161">            App.moveTime = 0;</span>
+
+        }
+
+    
+<span class="fc" id="L166">    }</span>
+
+    public void setRedX(int x){
+<span class="fc" id="L169">        this.x = x;</span>
+<span class="fc" id="L170">    }</span>
+    
+    public void setRedY(int y){
+<span class="fc" id="L173">        this.y = y;</span>
+<span class="fc" id="L174">    }</span>
+
+    public int getFacing(){
+<span class="fc" id="L177">        return this.facingDirection;</span>
+    }
+
+    public void setFacing(int facingDirection){
+<span class="fc" id="L181">        this.facingDirection = facingDirection;</span>
+<span class="fc" id="L182">    }</span>
+
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

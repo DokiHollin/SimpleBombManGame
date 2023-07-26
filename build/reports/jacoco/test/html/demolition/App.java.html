@@ -1,0 +1,780 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>App.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Demolition</a> &gt; <a href="index.source.html" class="el_package">demolition</a> &gt; <span class="el_source">App.java</span></div><h1>App.java</h1><pre class="source lang-java linenums">package demolition;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Scanner;
+import processing.data.*;
+import processing.core.*;
+import java.io.*;
+
+public class App extends PApplet {
+    public static boolean levelOnePass;
+    private PFont font;
+
+    public static final int WIDTH = 480;
+    
+    public static final int HEIGHT = 480;
+
+    public static final int FPS = 60;
+
+<span class="fc" id="L20">    public int keyCounter = 0;</span>
+
+    private static PImage wallImage;
+    private static PImage brokenImage;
+    public static PImage emptyImage;
+    private static PImage goalImage;
+
+    private static int playerX;
+    private static int playerY;
+
+    // private ArrayList&lt;PImage&gt; map; 
+    public static HashMap&lt;String,String&gt; mapObstacle;
+    public static HashMap&lt;String,String&gt; mapInverseObstacle;
+    private static ArrayList&lt;String&gt; mapOrin;
+    private static ArrayList&lt;Solid&gt; solid;
+    public static ArrayList&lt;Broken&gt; broken;
+    public static ArrayList&lt;Empty&gt; empty;
+    private static ArrayList&lt;Goal&gt; goal;
+
+    public static ArrayList&lt;PImage&gt; leftImage;
+    public static ArrayList&lt;PImage&gt; rightImage;
+    public static ArrayList&lt;PImage&gt; upImage;
+    public static ArrayList&lt;PImage&gt; downImage;
+
+    public static ArrayList&lt;PImage&gt; redLeftImage;
+    public static ArrayList&lt;PImage&gt; redRightImage;
+    public static ArrayList&lt;PImage&gt; redUpImage;
+    public static ArrayList&lt;PImage&gt; redDownImage;
+
+    public static ArrayList&lt;PImage&gt; yellowLeftImage;
+    public static ArrayList&lt;PImage&gt; yellowRightImage;
+    public static ArrayList&lt;PImage&gt; yellowUpImage;
+    public static ArrayList&lt;PImage&gt; yellowDownImage;
+
+    public static Player player;
+    public static Red redEnemy;
+    public static Yellow yellowEnemy;
+    // private int redFacingDirection;
+    public static boolean redExist;
+    int redPrevious;
+<span class="fc" id="L60">    private int redGraphicNum = 0;</span>
+    private static int redTimeCounter;
+<span class="fc" id="L62">    public static int moveTime = 0;</span>
+    // private Random redRand;
+    public static boolean yellowExist;
+    private int yellowPrevious;
+<span class="fc" id="L66">    private int yellowGraphicNum = 0;</span>
+    private static int yellowTimeCounter;
+<span class="fc" id="L68">    public static int yellowMoveTime = 0;</span>
+
+    
+
+    public static ArrayList&lt;PImage&gt; bombImage;
+    public static ArrayList&lt;Bomb&gt; bombList;
+    private static Bomb dropBomb;
+<span class="fc" id="L75">    public boolean setBomb = false;</span>
+
+    public static ArrayList&lt;PImage&gt; explosionImage;
+
+    public static String facingDirection;
+    private int timeCounter;
+<span class="fc" id="L81">    private static int graphicNum = 0;</span>
+    private String previous;
+    private PImage playerIcon;
+    private PImage clockIcon;
+    private Icons playerIcons;
+    private Icons clockIcons;
+
+    //json file variables
+<span class="fc" id="L89">    public static String fullFileName = &quot;config.json&quot;;</span>
+    public static String levelOneFilePath;
+    public static String levelTwoFilePath;
+    public static int levelOneTime;
+    public static int levelTwoTime;
+    public static int lives;  
+    //
+    private static int timeLimitCounter;
+
+<span class="fc" id="L98">    public App() {</span>
+<span class="fc" id="L99">        mapObstacle = new HashMap&lt;String,String&gt;();</span>
+<span class="fc" id="L100">        mapInverseObstacle = new HashMap&lt;String,String&gt;();</span>
+<span class="fc" id="L101">        mapOrin = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L102">        solid = new ArrayList&lt;Solid&gt;();</span>
+<span class="fc" id="L103">        broken = new ArrayList&lt;Broken&gt;();</span>
+<span class="fc" id="L104">        empty = new ArrayList&lt;Empty&gt;();</span>
+<span class="fc" id="L105">        goal = new ArrayList&lt;Goal&gt;();</span>
+<span class="fc" id="L106">        leftImage = new ArrayList&lt;PImage&gt;();</span>
+<span class="fc" id="L107">        rightImage = new ArrayList&lt;PImage&gt;();</span>
+<span class="fc" id="L108">        upImage = new ArrayList&lt;PImage&gt;();</span>
+<span class="fc" id="L109">        downImage = new ArrayList&lt;PImage&gt;();</span>
+<span class="fc" id="L110">        bombImage = new ArrayList&lt;PImage&gt;();</span>
+<span class="fc" id="L111">        bombList = new ArrayList&lt;Bomb&gt;();</span>
+<span class="fc" id="L112">        explosionImage = new ArrayList&lt;PImage&gt;();</span>
+
+<span class="fc" id="L114">        redLeftImage = new ArrayList&lt;PImage&gt;();</span>
+<span class="fc" id="L115">        redRightImage = new ArrayList&lt;PImage&gt;();</span>
+<span class="fc" id="L116">        redUpImage = new ArrayList&lt;PImage&gt;();</span>
+<span class="fc" id="L117">        redDownImage = new ArrayList&lt;PImage&gt;();</span>
+
+<span class="fc" id="L119">        yellowLeftImage = new ArrayList&lt;PImage&gt;();</span>
+<span class="fc" id="L120">        yellowRightImage = new ArrayList&lt;PImage&gt;();</span>
+<span class="fc" id="L121">        yellowUpImage = new ArrayList&lt;PImage&gt;();</span>
+<span class="fc" id="L122">        yellowDownImage = new ArrayList&lt;PImage&gt;();</span>
+
+<span class="fc" id="L124">        facingDirection = &quot;D&quot;;</span>
+<span class="fc" id="L125">    }</span>
+
+    public void settings() {
+<span class="fc" id="L128">        size(WIDTH, HEIGHT);</span>
+<span class="fc" id="L129">    }</span>
+
+    public void setup() {
+        JSONObject object;
+        try {
+<span class="fc" id="L134">            object = new JSONObject(new FileReader(fullFileName));</span>
+<span class="fc" id="L135">            JSONArray objectLevel = object.getJSONArray(&quot;levels&quot;);</span>
+<span class="fc" id="L136">            ArrayList&lt;String&gt; temp = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L137">            ArrayList&lt;Integer&gt; temp2 = new ArrayList&lt;Integer&gt;();</span>
+<span class="fc bfc" id="L138" title="All 2 branches covered.">            for (int i = 0; i &lt; objectLevel.size(); i++){</span>
+<span class="fc" id="L139">                JSONObject subObject = (JSONObject) objectLevel.get(i);</span>
+<span class="fc" id="L140">                temp.add((String)subObject.get(&quot;path&quot;));</span>
+<span class="fc" id="L141">                temp2.add((Integer)subObject.get(&quot;time&quot;));</span>
+            }
+<span class="fc" id="L143">            levelOneFilePath = temp.get(0);</span>
+<span class="fc" id="L144">            levelTwoFilePath = temp.get(1);</span>
+<span class="fc" id="L145">            levelOneTime = temp2.get(0);</span>
+<span class="fc" id="L146">            levelTwoTime = temp2.get(1);</span>
+<span class="fc" id="L147">            lives = (int) object.get(&quot;lives&quot;); </span>
+<span class="nc" id="L148">        } catch (FileNotFoundException e) {</span>
+<span class="nc" id="L149">            levelOneFilePath = &quot;level1.txt&quot;;</span>
+<span class="nc" id="L150">            levelTwoFilePath = &quot;level2.txt&quot;;</span>
+<span class="nc" id="L151">            lives = 3;</span>
+<span class="nc" id="L152">            levelOneTime = 180;</span>
+<span class="nc" id="L153">            levelTwoTime = 180;</span>
+<span class="fc" id="L154">        }</span>
+<span class="fc" id="L155">        font = createFont(&quot;src/main/resources/PressStart2P-Regular.ttf&quot;, 20);</span>
+<span class="fc" id="L156">        textFont(font);</span>
+<span class="fc" id="L157">        frameRate(FPS);</span>
+<span class="fc" id="L158">        levelOnePass = false;</span>
+<span class="fc" id="L159">        redExist = false;</span>
+<span class="fc" id="L160">        yellowExist = false;</span>
+<span class="fc" id="L161">        timeLimitCounter = 0;</span>
+<span class="fc" id="L162">        wallImage = loadImage(&quot;src/main/resources/wall/solid.png&quot;);</span>
+<span class="fc" id="L163">        brokenImage = loadImage(&quot;src/main/resources/broken/broken.png&quot;);</span>
+<span class="fc" id="L164">        emptyImage = loadImage(&quot;src/main/resources/empty/empty.png&quot;);</span>
+<span class="fc" id="L165">        goalImage = loadImage(&quot;src/main/resources/goal/goal.png&quot;);</span>
+<span class="fc" id="L166">        playerIcon = loadImage(&quot;src/main/resources/icons/player.png&quot;);</span>
+<span class="fc" id="L167">        clockIcon = loadImage(&quot;src/main/resources/icons/clock.png&quot;);</span>
+<span class="fc bfc" id="L168" title="All 2 branches covered.">        for (int i = 1; i &lt;=4; i++){</span>
+<span class="fc" id="L169">            leftImage.add(loadImage(&quot;src/main/resources/player/player_left&quot;+  i +&quot;.png&quot;));</span>
+        }
+<span class="fc bfc" id="L171" title="All 2 branches covered.">        for (int i = 1; i &lt;= 4; i++){</span>
+<span class="fc" id="L172">            rightImage.add(loadImage(&quot;src/main/resources/player/player_right&quot;+  i +&quot;.png&quot;));</span>
+        }
+<span class="fc bfc" id="L174" title="All 2 branches covered.">        for (int i = 1; i &lt;= 4; i++){</span>
+<span class="fc" id="L175">            upImage.add(loadImage(&quot;src/main/resources/player/player_up&quot;+  i +&quot;.png&quot;));</span>
+        }
+<span class="fc bfc" id="L177" title="All 2 branches covered.">        for (int i = 1; i &lt;= 4; i++){</span>
+<span class="fc" id="L178">            downImage.add(loadImage(&quot;src/main/resources/player/player&quot;+  i +&quot;.png&quot;));</span>
+        }
+<span class="fc bfc" id="L180" title="All 2 branches covered.">        for (int i = 1; i &lt;= 8; i++){</span>
+<span class="fc" id="L181">            bombImage.add(loadImage(&quot;src/main/resources/bomb/bomb&quot;+  i +&quot;.png&quot;));</span>
+        }
+//---------------------------------------------------------------------------- Red Enemy
+<span class="fc bfc" id="L184" title="All 2 branches covered.">        for (int i = 1; i &lt;=4; i++){</span>
+<span class="fc" id="L185">            redLeftImage.add(loadImage(&quot;src/main/resources/red_enemy/red_left&quot;+  i +&quot;.png&quot;));</span>
+        }
+<span class="fc bfc" id="L187" title="All 2 branches covered.">        for (int i = 1; i &lt;= 4; i++){</span>
+<span class="fc" id="L188">            redRightImage.add(loadImage(&quot;src/main/resources/red_enemy/red_right&quot;+  i +&quot;.png&quot;));</span>
+        }
+<span class="fc bfc" id="L190" title="All 2 branches covered.">        for (int i = 1; i &lt;= 4; i++){</span>
+<span class="fc" id="L191">            redUpImage.add(loadImage(&quot;src/main/resources/red_enemy/red_up&quot;+  i +&quot;.png&quot;));</span>
+        }
+<span class="fc bfc" id="L193" title="All 2 branches covered.">        for (int i = 1; i &lt;= 4; i++){</span>
+<span class="fc" id="L194">            redDownImage.add(loadImage(&quot;src/main/resources/red_enemy/red_down&quot;+  i +&quot;.png&quot;));</span>
+        }
+//---------------------------------------------------------------------------- Yellow Enemy
+<span class="fc bfc" id="L197" title="All 2 branches covered.">        for (int i = 1; i &lt;=4; i++){</span>
+<span class="fc" id="L198">            yellowLeftImage.add(loadImage(&quot;src/main/resources/yellow_enemy/yellow_left&quot;+  i +&quot;.png&quot;));</span>
+        }
+<span class="fc bfc" id="L200" title="All 2 branches covered.">        for (int i = 1; i &lt;= 4; i++){</span>
+<span class="fc" id="L201">            yellowRightImage.add(loadImage(&quot;src/main/resources/yellow_enemy/yellow_right&quot;+  i +&quot;.png&quot;));</span>
+        }
+<span class="fc bfc" id="L203" title="All 2 branches covered.">        for (int i = 1; i &lt;= 4; i++){</span>
+<span class="fc" id="L204">            yellowUpImage.add(loadImage(&quot;src/main/resources/yellow_enemy/yellow_up&quot;+  i +&quot;.png&quot;));</span>
+        }
+<span class="fc bfc" id="L206" title="All 2 branches covered.">        for (int i = 1; i &lt;= 4; i++){</span>
+<span class="fc" id="L207">            yellowDownImage.add(loadImage(&quot;src/main/resources/yellow_enemy/yellow_down&quot;+  i +&quot;.png&quot;));</span>
+        }
+
+<span class="fc" id="L210">        explosionImage.add(loadImage(&quot;src/main/resources/explosion/centre.png&quot;));      </span>
+<span class="fc" id="L211">        explosionImage.add(loadImage(&quot;src/main/resources/explosion/horizontal.png&quot;));</span>
+<span class="fc" id="L212">        explosionImage.add(loadImage(&quot;src/main/resources/explosion/vertical.png&quot;));</span>
+<span class="fc" id="L213">        explosionImage.add(loadImage(&quot;src/main/resources/explosion/end_bottom.png&quot;));</span>
+<span class="fc" id="L214">        explosionImage.add(loadImage(&quot;src/main/resources/explosion/end_left.png&quot;));</span>
+<span class="fc" id="L215">        explosionImage.add(loadImage(&quot;src/main/resources/explosion/end_right.png&quot;));</span>
+<span class="fc" id="L216">        explosionImage.add(loadImage(&quot;src/main/resources/explosion/end_top.png&quot;));</span>
+<span class="fc" id="L217">        playerIcons = new Icons(140,20,playerIcon);</span>
+<span class="fc" id="L218">        clockIcons = new Icons(260,20,clockIcon);</span>
+<span class="pc bpc" id="L219" title="1 of 2 branches missed.">        if (levelOneFilePath == null){</span>
+<span class="nc" id="L220">            levelOneFilePath = &quot;level1.txt&quot;;</span>
+<span class="nc" id="L221">            levelTwoFilePath = &quot;level2.txt&quot;;</span>
+<span class="nc" id="L222">            lives = 3;</span>
+<span class="nc" id="L223">            levelOneTime = 180;</span>
+<span class="nc" id="L224">            levelTwoTime = 180;    </span>
+        }
+<span class="fc" id="L226">        File f = new File(levelOneFilePath);</span>
+        Scanner scan;
+        try {
+<span class="fc" id="L229">            scan = new Scanner(f);</span>
+<span class="fc bfc" id="L230" title="All 2 branches covered.">            while (scan.hasNextLine()){</span>
+<span class="fc" id="L231">                String contents = scan.nextLine();</span>
+<span class="fc" id="L232">                mapOrin.add(contents);</span>
+                
+<span class="fc" id="L234">            }</span>
+<span class="fc" id="L235">            int initialX = 0;</span>
+<span class="fc" id="L236">            int initialY = 64;</span>
+<span class="fc" id="L237">            int wallCounter = 0;</span>
+<span class="fc" id="L238">            int BrokenCounter = 0;</span>
+<span class="fc bfc" id="L239" title="All 2 branches covered.">            for (String each: mapOrin){</span>
+<span class="fc bfc" id="L240" title="All 2 branches covered.">                for (int i = 0; i &lt; each.length(); i ++){</span>
+<span class="fc bfc" id="L241" title="All 2 branches covered.">                    if ((String.valueOf(each.charAt(i))).equals(&quot;W&quot;)){</span>
+
+<span class="fc" id="L243">                        solid.add(new Solid(initialX , initialY , wallImage));</span>
+<span class="fc" id="L244">                        mapObstacle.put(&quot;solid&quot;+wallCounter,(String.valueOf(initialX)+String.valueOf(initialY)));</span>
+<span class="fc" id="L245">                        mapInverseObstacle.put((String.valueOf(initialX)+String.valueOf(initialY)),&quot;solid&quot;);</span>
+<span class="fc" id="L246">                        wallCounter ++;</span>
+<span class="fc bfc" id="L247" title="All 2 branches covered.">                    }else if ((String.valueOf(each.charAt(i))).equals(&quot;B&quot;)){</span>
+                        
+<span class="fc" id="L249">                        broken.add(new Broken(initialX , initialY , brokenImage));</span>
+<span class="fc" id="L250">                        mapObstacle.put(&quot;broken&quot;+BrokenCounter,(String.valueOf(initialX)+String.valueOf(initialY))); </span>
+<span class="fc" id="L251">                        mapInverseObstacle.put((String.valueOf(initialX)+String.valueOf(initialY)),&quot;broken&quot;);</span>
+<span class="fc" id="L252">                        BrokenCounter ++;</span>
+<span class="fc bfc" id="L253" title="All 2 branches covered.">                    }else if ((String.valueOf(each.charAt(i))).equals(&quot; &quot;)){</span>
+<span class="fc" id="L254">                        mapInverseObstacle.put((String.valueOf(initialX)+String.valueOf(initialY)),&quot;empty&quot;);</span>
+<span class="fc" id="L255">                        empty.add(new Empty(initialX , initialY , emptyImage)); </span>
+
+<span class="fc bfc" id="L257" title="All 2 branches covered.">                    }else if ((String.valueOf(each.charAt(i))).equals(&quot;G&quot;)){</span>
+<span class="fc" id="L258">                        mapInverseObstacle.put((String.valueOf(initialX)+String.valueOf(initialY)),&quot;goal&quot;);</span>
+<span class="fc" id="L259">                        goal.add(new Goal(initialX , initialY , goalImage)); </span>
+
+<span class="fc bfc" id="L261" title="All 2 branches covered.">                    }else if ((String.valueOf(each.charAt(i))).equals(&quot;Y&quot;)){</span>
+<span class="fc" id="L262">                        mapInverseObstacle.put((String.valueOf(initialX)+String.valueOf(initialY)),&quot;yellow&quot;);</span>
+<span class="fc" id="L263">                        empty.add(new Empty(initialX , initialY , emptyImage));</span>
+<span class="fc" id="L264">                        yellowEnemy = new Yellow(initialX, initialY, yellowDownImage.get(0));  </span>
+<span class="fc" id="L265">                        yellowExist = true;</span>
+<span class="fc bfc" id="L266" title="All 2 branches covered.">                    }else if ((String.valueOf(each.charAt(i))).equals(&quot;P&quot;)){</span>
+<span class="fc" id="L267">                        mapInverseObstacle.put((String.valueOf(initialX)+String.valueOf(initialY)),&quot;player&quot;);</span>
+<span class="fc" id="L268">                        empty.add(new Empty(initialX , initialY , emptyImage));</span>
+<span class="fc" id="L269">                        playerX = initialX;</span>
+<span class="fc" id="L270">                        playerY = initialY;</span>
+<span class="fc" id="L271">                        player = new Player(playerX, playerY, downImage.get(graphicNum), dropBomb);</span>
+<span class="pc bpc" id="L272" title="1 of 2 branches missed.">                    }else if ((String.valueOf(each.charAt(i))).equals(&quot;R&quot;)){</span>
+<span class="fc" id="L273">                        mapInverseObstacle.put((String.valueOf(initialX)+String.valueOf(initialY)),&quot;red&quot;);</span>
+<span class="fc" id="L274">                        redEnemy = new Red(initialX, initialY, redDownImage.get(0));</span>
+<span class="fc" id="L275">                        empty.add(new Empty(initialX , initialY , emptyImage)); </span>
+<span class="fc" id="L276">                        redEnemy.setRedX(initialX);</span>
+<span class="fc" id="L277">                        redEnemy.setRedY(initialY); </span>
+<span class="fc" id="L278">                        redExist = true;</span>
+
+                    }
+                        
+<span class="fc" id="L282">                    initialX += 32;</span>
+                }
+<span class="fc" id="L284">                initialX = 0; </span>
+<span class="fc" id="L285">                initialY += 32;</span>
+<span class="fc" id="L286">            }</span>
+           
+<span class="nc" id="L288">        } catch (FileNotFoundException e) {</span>
+<span class="nc" id="L289">            System.out.println(&quot;No such file exist.&quot;);</span>
+<span class="fc" id="L290">        }</span>
+        
+        
+        // Load images during setup
+<span class="fc" id="L294">    }</span>
+
+    
+
+    public void draw() {
+<span class="fc" id="L299">        System.out.println(player.getX());</span>
+<span class="fc" id="L300">        System.out.println(player.getY());</span>
+<span class="fc" id="L301">        background(255, 140, 0);</span>
+<span class="fc bfc" id="L302" title="All 2 branches covered.">        if (levelOnePass){</span>
+<span class="nc bnc" id="L303" title="All 4 branches missed.">            if (levelOneTime == 0 || player.getPlayerLife() == 0){</span>
+<span class="nc" id="L304">                text(&quot;GAME OVER&quot;, 140 , 240);</span>
+<span class="nc" id="L305">                return;</span>
+            }
+<span class="nc bnc" id="L307" title="All 4 branches missed.">            if (player.getX() == goal.get(0).getX() &amp;&amp; player.getY() == goal.get(0).getY()){</span>
+<span class="nc" id="L308">                text(&quot;YOU WIN&quot;, 150 , 240);</span>
+<span class="nc" id="L309">                return;</span>
+            }
+        }else{
+<span class="pc bpc" id="L312" title="2 of 4 branches missed.">            if (levelOneTime == 0 || player.getPlayerLife() == 0){</span>
+<span class="nc" id="L313">                text(&quot;GAME OVER&quot;, 140 , 240);</span>
+<span class="nc" id="L314">                return;</span>
+            }
+<span class="pc bpc" id="L316" title="1 of 4 branches missed.">            if (player.getX() == goal.get(0).getX() &amp;&amp; player.getY() == goal.get(0).getY()){</span>
+<span class="fc" id="L317">                levelOnePass = true;</span>
+<span class="fc" id="L318">                secondLevel();</span>
+<span class="fc" id="L319">                return;</span>
+            }
+        }
+        
+<span class="fc" id="L323">        playerIcons.draw(this);</span>
+<span class="fc" id="L324">        clockIcons.draw(this);</span>
+<span class="fc" id="L325">        fill(0, 0, 0);</span>
+<span class="fc" id="L326">        text(player.getPlayerLife(), 180 , 48);</span>
+<span class="fc" id="L327">        text(levelOneTime, 300 ,48);</span>
+<span class="fc bfc" id="L328" title="All 2 branches covered.">        while (timeLimitCounter &gt; 60){</span>
+<span class="fc" id="L329">            levelOneTime --;</span>
+<span class="fc" id="L330">            timeLimitCounter = 0;</span>
+        }
+
+<span class="fc bfc" id="L333" title="All 2 branches covered.">        for (Solid each: solid){</span>
+<span class="fc" id="L334">            each.draw(this); </span>
+<span class="fc" id="L335">        }</span>
+<span class="fc bfc" id="L336" title="All 2 branches covered.">        for (Broken each: broken){</span>
+<span class="fc" id="L337">            each.draw(this);    </span>
+<span class="fc" id="L338">        }</span>
+<span class="fc bfc" id="L339" title="All 2 branches covered.">        for (Empty each: empty){</span>
+<span class="fc" id="L340">            each.draw(this);    </span>
+<span class="fc" id="L341">        }</span>
+<span class="fc bfc" id="L342" title="All 2 branches covered.">        for (Goal each: goal){</span>
+<span class="fc" id="L343">            each.draw(this);    </span>
+<span class="fc" id="L344">        }</span>
+<span class="fc bfc" id="L345" title="All 2 branches covered.">        if (bombList.size() != 0){</span>
+<span class="fc bfc" id="L346" title="All 2 branches covered.">            for (Bomb eachBombs: bombList){</span>
+<span class="fc bfc" id="L347" title="All 2 branches covered.">                if (!eachBombs.isFinishedBomb()){</span>
+<span class="fc" id="L348">                    eachBombs.tick();</span>
+<span class="fc" id="L349">                    eachBombs.draw(this); </span>
+                        
+<span class="pc bpc" id="L351" title="1 of 4 branches missed.">                }else if (eachBombs.isFinishedBomb() &amp;&amp; !eachBombs.close()){</span>
+<span class="fc" id="L352">                    eachBombs.draw(this);</span>
+
+                }  
+
+                
+<span class="fc" id="L357">            }</span>
+        }
+<span class="fc bfc" id="L359" title="All 2 branches covered.">        if(graphicNum == 3){</span>
+<span class="fc" id="L360">            graphicNum = 0;</span>
+        }
+<span class="pc bpc" id="L362" title="1 of 2 branches missed.">        if (player.getPlayerLife() &lt;= 0){</span>
+<span class="nc" id="L363">            player.setAlive(false);</span>
+        }
+<span class="pc bpc" id="L365" title="1 of 2 branches missed.">        if (player.isAlive()){</span>
+<span class="fc bfc" id="L366" title="All 2 branches covered.">            if (facingDirection == &quot;D&quot;){</span>
+<span class="fc bfc" id="L367" title="All 2 branches covered.">                if (previous != &quot;D&quot;){</span>
+<span class="fc" id="L368">                    player.setSprite(downImage.get(graphicNum));   </span>
+                }
+<span class="fc bfc" id="L370" title="All 2 branches covered.">                if (timeCounter &gt; 60*0.2){ </span>
+<span class="fc" id="L371">                    graphicNum ++;</span>
+<span class="fc" id="L372">                    timeCounter = 0;</span>
+<span class="fc" id="L373">                    player.setSprite(downImage.get(graphicNum));</span>
+                } 
+<span class="fc" id="L375">                player.tick();</span>
+<span class="fc" id="L376">                player.draw(this);</span>
+<span class="fc" id="L377">                previous = &quot;D&quot;;               </span>
+<span class="fc bfc" id="L378" title="All 2 branches covered.">            }else if (facingDirection == &quot;U&quot;){</span>
+<span class="fc bfc" id="L379" title="All 2 branches covered.">                if (previous != &quot;U&quot;){</span>
+<span class="fc" id="L380">                    player.setSprite(upImage.get(graphicNum));   </span>
+                } 
+<span class="fc bfc" id="L382" title="All 2 branches covered.">                if (timeCounter &gt; 60*0.2){ </span>
+<span class="fc" id="L383">                    graphicNum ++;</span>
+<span class="fc" id="L384">                    timeCounter = 0;</span>
+<span class="fc" id="L385">                    player.setSprite(upImage.get(graphicNum));</span>
+                } 
+<span class="fc" id="L387">                player.tick();</span>
+<span class="fc" id="L388">                player.draw(this);</span>
+<span class="fc" id="L389">                previous = &quot;U&quot;;  </span>
+<span class="fc bfc" id="L390" title="All 2 branches covered.">            }else if(facingDirection == &quot;R&quot;){</span>
+<span class="fc bfc" id="L391" title="All 2 branches covered.">                if (previous != &quot;R&quot;){</span>
+<span class="fc" id="L392">                    player.setSprite(rightImage.get(graphicNum));    </span>
+                } 
+<span class="fc bfc" id="L394" title="All 2 branches covered.">                if (timeCounter &gt; 60*0.2){ </span>
+<span class="fc" id="L395">                    graphicNum ++;</span>
+<span class="fc" id="L396">                    timeCounter = 0;</span>
+<span class="fc" id="L397">                    player.setSprite(rightImage.get(graphicNum));</span>
+                } 
+<span class="fc" id="L399">                player.tick();</span>
+<span class="fc" id="L400">                player.draw(this);</span>
+<span class="fc" id="L401">                previous = &quot;R&quot;; </span>
+<span class="pc bpc" id="L402" title="1 of 2 branches missed.">            }else if(facingDirection == &quot;L&quot;){</span>
+<span class="fc bfc" id="L403" title="All 2 branches covered.">                if (previous != &quot;L&quot;){</span>
+<span class="fc" id="L404">                    player.setSprite(leftImage.get(graphicNum));   </span>
+                } 
+<span class="fc bfc" id="L406" title="All 2 branches covered.">                if (timeCounter &gt; 60*0.2){ </span>
+<span class="fc" id="L407">                    graphicNum ++;</span>
+<span class="fc" id="L408">                    timeCounter = 0;</span>
+<span class="fc" id="L409">                    player.setSprite(leftImage.get(graphicNum));</span>
+                } 
+<span class="fc" id="L411">                player.tick();</span>
+<span class="fc" id="L412">                player.draw(this);</span>
+<span class="fc" id="L413">                previous = &quot;L&quot;;</span>
+            }
+<span class="fc bfc" id="L415" title="All 2 branches covered.">            if (setBomb){</span>
+<span class="fc" id="L416">                bombList.add(new Bomb(player.getX(), player.getY(), bombImage.get(0)));</span>
+<span class="fc" id="L417">                setBomb = false;</span>
+            }
+        }
+//--------------------------------------------------------------------------
+<span class="fc bfc" id="L421" title="All 2 branches covered.">        if(redGraphicNum == 3){</span>
+<span class="fc" id="L422">            redGraphicNum = 0;</span>
+        }
+<span class="pc bpc" id="L424" title="1 of 2 branches missed.">        if (redExist){</span>
+<span class="fc bfc" id="L425" title="All 2 branches covered.">            if(redEnemy.isAlive()){</span>
+<span class="fc bfc" id="L426" title="All 2 branches covered.">                if (redEnemy.getFacing() == 0){</span>
+<span class="fc bfc" id="L427" title="All 2 branches covered.">                    if (redPrevious != 0){</span>
+<span class="fc" id="L428">                        redEnemy.setSprite(redDownImage.get(redGraphicNum));   </span>
+                    }
+<span class="fc bfc" id="L430" title="All 2 branches covered.">                    if (redTimeCounter &gt; 60*0.2){ </span>
+<span class="fc" id="L431">                        redGraphicNum ++;</span>
+<span class="fc" id="L432">                        redTimeCounter = 0;</span>
+<span class="fc" id="L433">                        redEnemy.setSprite(redDownImage.get(redGraphicNum));</span>
+                    }
+<span class="fc bfc" id="L435" title="All 2 branches covered.">                    if (moveTime &gt; 60){ </span>
+<span class="fc" id="L436">                        redEnemy.tick();</span>
+                    }
+<span class="fc" id="L438">                    redEnemy.draw(this);</span>
+<span class="fc" id="L439">                    redPrevious = 0; </span>
+<span class="fc bfc" id="L440" title="All 2 branches covered.">                }else if(redEnemy.getFacing() == 1){</span>
+<span class="fc bfc" id="L441" title="All 2 branches covered.">                    if (redPrevious != 1){</span>
+<span class="fc" id="L442">                        redEnemy.setSprite(redLeftImage.get(redGraphicNum));   </span>
+                    } 
+<span class="fc bfc" id="L444" title="All 2 branches covered.">                    if (redTimeCounter &gt; 60*0.2){ </span>
+<span class="fc" id="L445">                        redGraphicNum ++;</span>
+<span class="fc" id="L446">                        redTimeCounter = 0;</span>
+<span class="fc" id="L447">                        redEnemy.setSprite(redLeftImage.get(redGraphicNum));</span>
+                    } 
+<span class="fc bfc" id="L449" title="All 2 branches covered.">                    if (moveTime &gt; 60){</span>
+<span class="fc" id="L450">                        redEnemy.tick();</span>
+                    }
+<span class="fc" id="L452">                    redEnemy.draw(this);</span>
+<span class="fc" id="L453">                    redPrevious = 1;              </span>
+<span class="fc bfc" id="L454" title="All 2 branches covered.">                }else if (redEnemy.getFacing() == 2){</span>
+<span class="fc bfc" id="L455" title="All 2 branches covered.">                    if (redPrevious != 2){</span>
+<span class="fc" id="L456">                        redEnemy.setSprite(redUpImage.get(redGraphicNum));   </span>
+                    } 
+<span class="fc bfc" id="L458" title="All 2 branches covered.">                    if (redTimeCounter &gt; 60*0.2){ </span>
+<span class="fc" id="L459">                        redGraphicNum ++;</span>
+<span class="fc" id="L460">                        redTimeCounter = 0;</span>
+<span class="fc" id="L461">                        redEnemy.setSprite(redUpImage.get(redGraphicNum));</span>
+                    } 
+<span class="pc bpc" id="L463" title="1 of 2 branches missed.">                    if (moveTime &gt; 60){</span>
+<span class="nc" id="L464">                        redEnemy.tick();</span>
+                    }
+                    
+<span class="fc" id="L467">                    redEnemy.draw(this);</span>
+<span class="fc" id="L468">                    redPrevious = 2;  </span>
+<span class="pc bpc" id="L469" title="1 of 2 branches missed.">                }else if(redEnemy.getFacing() == 3){</span>
+<span class="fc bfc" id="L470" title="All 2 branches covered.">                    if (redPrevious != 3){</span>
+<span class="fc" id="L471">                        redEnemy.setSprite(redRightImage.get(redGraphicNum));    </span>
+                    } 
+<span class="fc bfc" id="L473" title="All 2 branches covered.">                    if (redTimeCounter &gt; 60*0.2){ </span>
+<span class="fc" id="L474">                        redGraphicNum ++;</span>
+<span class="fc" id="L475">                        redTimeCounter = 0;</span>
+<span class="fc" id="L476">                        redEnemy.setSprite(redRightImage.get(redGraphicNum));</span>
+                    } 
+<span class="fc bfc" id="L478" title="All 2 branches covered.">                    if (moveTime &gt; 60){</span>
+<span class="fc" id="L479">                        redEnemy.tick();</span>
+                    }
+<span class="fc" id="L481">                    redEnemy.draw(this);</span>
+<span class="fc" id="L482">                    redPrevious = 3; </span>
+                }
+            }
+        }
+// -----------------------------------------------------------------------------------------------;
+<span class="fc bfc" id="L487" title="All 2 branches covered.">        if(yellowGraphicNum == 3){</span>
+<span class="fc" id="L488">            yellowGraphicNum = 0;</span>
+        }
+<span class="pc bpc" id="L490" title="1 of 2 branches missed.">        if (yellowExist){</span>
+<span class="fc bfc" id="L491" title="All 2 branches covered.">            if(yellowEnemy.isAlive()){</span>
+<span class="fc bfc" id="L492" title="All 2 branches covered.">                if (yellowEnemy.getFacing() == 0){</span>
+<span class="fc bfc" id="L493" title="All 2 branches covered.">                    if (yellowPrevious != 0){</span>
+<span class="fc" id="L494">                        yellowEnemy.setSprite(yellowDownImage.get(yellowGraphicNum));   </span>
+                    }
+<span class="fc bfc" id="L496" title="All 2 branches covered.">                    if (yellowTimeCounter &gt; 60*0.2){ </span>
+<span class="fc" id="L497">                        yellowGraphicNum ++;</span>
+<span class="fc" id="L498">                        yellowTimeCounter = 0;</span>
+<span class="fc" id="L499">                        yellowEnemy.setSprite(yellowDownImage.get(yellowGraphicNum));</span>
+                    }
+<span class="fc bfc" id="L501" title="All 2 branches covered.">                    if (yellowMoveTime &gt; 60){ </span>
+<span class="fc" id="L502">                        yellowEnemy.tick();</span>
+                    }
+<span class="fc" id="L504">                    yellowEnemy.draw(this);</span>
+<span class="fc" id="L505">                    yellowPrevious = 0; </span>
+<span class="fc bfc" id="L506" title="All 2 branches covered.">                }else if(yellowEnemy.getFacing() == 1){</span>
+<span class="fc bfc" id="L507" title="All 2 branches covered.">                    if (yellowPrevious != 1){</span>
+<span class="fc" id="L508">                        yellowEnemy.setSprite(yellowLeftImage.get(yellowGraphicNum));   </span>
+                    } 
+<span class="fc bfc" id="L510" title="All 2 branches covered.">                    if (yellowTimeCounter &gt; 60*0.2){ </span>
+<span class="fc" id="L511">                        yellowGraphicNum ++;</span>
+<span class="fc" id="L512">                        yellowTimeCounter = 0;</span>
+<span class="fc" id="L513">                        yellowEnemy.setSprite(yellowLeftImage.get(yellowGraphicNum));</span>
+                    } 
+<span class="fc bfc" id="L515" title="All 2 branches covered.">                    if (yellowMoveTime &gt; 60){</span>
+<span class="fc" id="L516">                        yellowEnemy.tick();</span>
+                    }
+<span class="fc" id="L518">                    yellowEnemy.draw(this);</span>
+<span class="fc" id="L519">                    yellowPrevious = 1;              </span>
+<span class="fc bfc" id="L520" title="All 2 branches covered.">                }else if (yellowEnemy.getFacing() == 2){</span>
+<span class="fc bfc" id="L521" title="All 2 branches covered.">                    if (yellowPrevious != 2){</span>
+<span class="fc" id="L522">                        yellowEnemy.setSprite(yellowUpImage.get(yellowGraphicNum));   </span>
+                    } 
+<span class="fc bfc" id="L524" title="All 2 branches covered.">                    if (yellowTimeCounter &gt; 60*0.2){ </span>
+<span class="fc" id="L525">                        yellowGraphicNum ++;</span>
+<span class="fc" id="L526">                        yellowTimeCounter = 0;</span>
+<span class="fc" id="L527">                        yellowEnemy.setSprite(yellowUpImage.get(yellowGraphicNum));</span>
+                    } 
+<span class="fc bfc" id="L529" title="All 2 branches covered.">                    if (yellowMoveTime &gt; 60){</span>
+<span class="fc" id="L530">                        yellowEnemy.tick();</span>
+                    }
+                    
+<span class="fc" id="L533">                    yellowEnemy.draw(this);</span>
+<span class="fc" id="L534">                    yellowPrevious = 2;  </span>
+<span class="pc bpc" id="L535" title="1 of 2 branches missed.">                }else if(yellowEnemy.getFacing() == 3){</span>
+<span class="fc bfc" id="L536" title="All 2 branches covered.">                    if (yellowPrevious != 3){</span>
+<span class="fc" id="L537">                        yellowEnemy.setSprite(yellowRightImage.get(yellowGraphicNum));    </span>
+                    } 
+<span class="fc bfc" id="L539" title="All 2 branches covered.">                    if (yellowTimeCounter &gt; 60*0.2){ </span>
+<span class="fc" id="L540">                        yellowGraphicNum ++;</span>
+<span class="fc" id="L541">                        yellowTimeCounter = 0;</span>
+<span class="fc" id="L542">                        yellowEnemy.setSprite(yellowRightImage.get(yellowGraphicNum));</span>
+                    } 
+<span class="pc bpc" id="L544" title="1 of 2 branches missed.">                    if (yellowMoveTime &gt; 60){</span>
+<span class="nc" id="L545">                        yellowEnemy.tick();</span>
+                    }
+<span class="fc" id="L547">                    yellowEnemy.draw(this);</span>
+<span class="fc" id="L548">                    yellowPrevious = 3; </span>
+                }
+            }
+        }
+        // System.out.println(player.getY());
+<span class="fc" id="L553">        player.checkCollision(); </span>
+<span class="fc" id="L554">        timeLimitCounter ++;</span>
+<span class="fc" id="L555">        Player.direction = &quot;null&quot;;</span>
+<span class="fc" id="L556">        timeCounter ++;</span>
+<span class="fc" id="L557">        redTimeCounter ++;</span>
+<span class="fc" id="L558">        moveTime ++;</span>
+<span class="fc" id="L559">        yellowTimeCounter ++;</span>
+<span class="fc" id="L560">        yellowMoveTime ++;</span>
+        // while(timeCounts &gt; 60){
+        //     // System.out.print(player.getX()+&quot; &quot;+ player.getY() +&quot;\n&quot;);  
+        //     // timeCounts = 0;
+        //     System.out.println(mapObstacle.size());
+        //     timeCounts = 0;
+        // }
+        
+       
+<span class="fc" id="L569">    }</span>
+
+    public ArrayList&lt;String&gt; getMapOrin(){
+<span class="nc" id="L572">        return mapOrin;</span>
+    }
+
+    public void keyPressed() {
+        // Left: 37
+        // Up: 38
+        // Right: 39
+        // Down: 40
+<span class="pc bpc" id="L580" title="1 of 4 branches missed.">        if (this.keyCode == 37 &amp;&amp; keyCounter == 0) {  //left</span>
+<span class="fc" id="L581">            keyCounter = 1;</span>
+<span class="fc" id="L582">            Player.direction = &quot;L&quot;;</span>
+<span class="fc" id="L583">            facingDirection = &quot;L&quot;;</span>
+<span class="pc bpc" id="L584" title="1 of 4 branches missed.">        } else if (this.keyCode == 39 &amp;&amp; keyCounter == 0) { //right</span>
+<span class="fc" id="L585">            keyCounter = 1;</span>
+<span class="fc" id="L586">            Player.direction = &quot;R&quot;;</span>
+<span class="fc" id="L587">            facingDirection = &quot;R&quot;;</span>
+<span class="pc bpc" id="L588" title="1 of 4 branches missed.">        }else if (this.keyCode == 38 &amp;&amp; keyCounter == 0) { //up</span>
+<span class="fc" id="L589">            keyCounter = 1;</span>
+<span class="fc" id="L590">            Player.direction = &quot;U&quot;;</span>
+<span class="fc" id="L591">            facingDirection = &quot;U&quot;;</span>
+<span class="pc bpc" id="L592" title="1 of 4 branches missed.">        }else if (this.keyCode == 40 &amp;&amp; keyCounter == 0) { //down</span>
+<span class="fc" id="L593">            keyCounter = 1;</span>
+<span class="fc" id="L594">            Player.direction = &quot;D&quot;;</span>
+<span class="fc" id="L595">            facingDirection = &quot;D&quot;;</span>
+<span class="pc bpc" id="L596" title="1 of 4 branches missed.">        }else if (this.keyCode == 32 &amp;&amp; keyCounter == 0) { //space</span>
+<span class="fc" id="L597">            keyCounter = 1;</span>
+<span class="fc" id="L598">            setBomb = true;</span>
+        }
+<span class="fc" id="L600">    }</span>
+
+    public void keyReleased(){
+<span class="nc" id="L603">        keyCounter = 0;</span>
+<span class="nc" id="L604">    }</span>
+
+    public static void restart(){
+<span class="fc" id="L607">        File f = new File(levelOneFilePath);</span>
+<span class="fc" id="L608">        mapOrin.clear();</span>
+<span class="fc" id="L609">        solid.clear();</span>
+<span class="fc" id="L610">        mapObstacle.clear();</span>
+<span class="fc" id="L611">        mapInverseObstacle.clear();</span>
+<span class="fc" id="L612">        broken.clear();</span>
+<span class="fc" id="L613">        empty.clear();</span>
+<span class="fc" id="L614">        goal.clear();</span>
+<span class="fc" id="L615">        timeLimitCounter = 0;</span>
+<span class="fc" id="L616">        graphicNum = 0;</span>
+        Scanner scan;
+        try {
+<span class="fc" id="L619">            scan = new Scanner(f);</span>
+<span class="fc bfc" id="L620" title="All 2 branches covered.">            while (scan.hasNextLine()){</span>
+<span class="fc" id="L621">                String contents = scan.nextLine();</span>
+<span class="fc" id="L622">                mapOrin.add(contents);</span>
+                
+<span class="fc" id="L624">            }</span>
+<span class="fc" id="L625">            int initialX = 0;</span>
+<span class="fc" id="L626">            int initialY = 64;</span>
+<span class="fc" id="L627">            int wallCounter = 0;</span>
+<span class="fc" id="L628">            int BrokenCounter = 0;</span>
+<span class="fc bfc" id="L629" title="All 2 branches covered.">            for (String each: mapOrin){</span>
+<span class="fc bfc" id="L630" title="All 2 branches covered.">                for (int i = 0; i &lt; each.length(); i ++){</span>
+<span class="fc bfc" id="L631" title="All 2 branches covered.">                    if ((String.valueOf(each.charAt(i))).equals(&quot;W&quot;)){</span>
+
+<span class="fc" id="L633">                        solid.add(new Solid(initialX , initialY , wallImage));</span>
+<span class="fc" id="L634">                        mapObstacle.put(&quot;solid&quot;+wallCounter,(String.valueOf(initialX)+String.valueOf(initialY)));</span>
+<span class="fc" id="L635">                        mapInverseObstacle.put((String.valueOf(initialX)+String.valueOf(initialY)),&quot;solid&quot;);</span>
+<span class="fc" id="L636">                        wallCounter ++;</span>
+<span class="fc bfc" id="L637" title="All 2 branches covered.">                    }else if ((String.valueOf(each.charAt(i))).equals(&quot;B&quot;)){</span>
+                        
+<span class="fc" id="L639">                        broken.add(new Broken(initialX , initialY , brokenImage));</span>
+<span class="fc" id="L640">                        mapObstacle.put(&quot;broken&quot;+BrokenCounter,(String.valueOf(initialX)+String.valueOf(initialY))); </span>
+<span class="fc" id="L641">                        mapInverseObstacle.put((String.valueOf(initialX)+String.valueOf(initialY)),&quot;broken&quot;);</span>
+<span class="fc" id="L642">                        BrokenCounter ++;</span>
+<span class="fc bfc" id="L643" title="All 2 branches covered.">                    }else if ((String.valueOf(each.charAt(i))).equals(&quot; &quot;)){</span>
+<span class="fc" id="L644">                        mapInverseObstacle.put((String.valueOf(initialX)+String.valueOf(initialY)),&quot;empty&quot;);</span>
+<span class="fc" id="L645">                        empty.add(new Empty(initialX , initialY , emptyImage)); </span>
+
+<span class="fc bfc" id="L647" title="All 2 branches covered.">                    }else if ((String.valueOf(each.charAt(i))).equals(&quot;G&quot;)){</span>
+<span class="fc" id="L648">                        mapInverseObstacle.put((String.valueOf(initialX)+String.valueOf(initialY)),&quot;goal&quot;);</span>
+<span class="fc" id="L649">                        goal.add(new Goal(initialX , initialY , goalImage)); </span>
+
+<span class="fc bfc" id="L651" title="All 2 branches covered.">                    }else if ((String.valueOf(each.charAt(i))).equals(&quot;Y&quot;)){</span>
+<span class="fc" id="L652">                        mapInverseObstacle.put((String.valueOf(initialX)+String.valueOf(initialY)),&quot;yellow&quot;);</span>
+<span class="fc" id="L653">                        empty.add(new Empty(initialX , initialY , emptyImage));</span>
+<span class="fc" id="L654">                        yellowEnemy = new Yellow(initialX, initialY, yellowDownImage.get(0));  </span>
+<span class="fc" id="L655">                        yellowExist = true;</span>
+<span class="fc bfc" id="L656" title="All 2 branches covered.">                    }else if ((String.valueOf(each.charAt(i))).equals(&quot;P&quot;)){</span>
+<span class="fc" id="L657">                        mapInverseObstacle.put((String.valueOf(initialX)+String.valueOf(initialY)),&quot;player&quot;);</span>
+<span class="fc" id="L658">                        empty.add(new Empty(initialX , initialY , emptyImage));</span>
+<span class="fc" id="L659">                        playerX = initialX;</span>
+<span class="fc" id="L660">                        playerY = initialY;</span>
+<span class="fc" id="L661">                        player = new Player(playerX, playerY, downImage.get(0), dropBomb);</span>
+<span class="pc bpc" id="L662" title="1 of 2 branches missed.">                    }else if ((String.valueOf(each.charAt(i))).equals(&quot;R&quot;)){</span>
+<span class="fc" id="L663">                        mapInverseObstacle.put((String.valueOf(initialX)+String.valueOf(initialY)),&quot;red&quot;);</span>
+<span class="fc" id="L664">                        redEnemy = new Red(initialX, initialY, redDownImage.get(0));</span>
+<span class="fc" id="L665">                        empty.add(new Empty(initialX , initialY , emptyImage)); </span>
+<span class="fc" id="L666">                        redEnemy.setRedX(initialX);</span>
+<span class="fc" id="L667">                        redEnemy.setRedY(initialY); </span>
+<span class="fc" id="L668">                        redExist = true;</span>
+
+                    }
+                        
+<span class="fc" id="L672">                    initialX += 32;</span>
+                }
+<span class="fc" id="L674">                initialX = 0; </span>
+<span class="fc" id="L675">                initialY += 32;</span>
+<span class="fc" id="L676">                facingDirection = &quot;D&quot;;</span>
+<span class="fc" id="L677">                redTimeCounter = 0;</span>
+<span class="fc" id="L678">                yellowTimeCounter = 0;</span>
+<span class="fc" id="L679">                yellowMoveTime = 0;</span>
+<span class="fc" id="L680">                moveTime = 0;</span>
+<span class="fc" id="L681">            }</span>
+           
+<span class="nc" id="L683">        } catch (FileNotFoundException e) {</span>
+<span class="nc" id="L684">            System.out.println(&quot;No such file exist.&quot;);</span>
+<span class="fc" id="L685">        }</span>
+<span class="fc" id="L686">    }</span>
+
+    public static void secondLevel(){
+<span class="fc" id="L689">        File f = new File(levelTwoFilePath);</span>
+<span class="fc" id="L690">        mapOrin.clear();</span>
+<span class="fc" id="L691">        solid.clear();</span>
+<span class="fc" id="L692">        mapObstacle.clear();</span>
+<span class="fc" id="L693">        mapInverseObstacle.clear();</span>
+<span class="fc" id="L694">        broken.clear();</span>
+<span class="fc" id="L695">        empty.clear();</span>
+<span class="fc" id="L696">        goal.clear();</span>
+<span class="fc" id="L697">        timeLimitCounter = 0;</span>
+<span class="fc" id="L698">        graphicNum = 0;</span>
+<span class="fc" id="L699">        redEnemy.dead();</span>
+<span class="fc" id="L700">        yellowEnemy.dead();</span>
+        Scanner scan;
+        try {
+<span class="fc" id="L703">            scan = new Scanner(f);</span>
+<span class="fc bfc" id="L704" title="All 2 branches covered.">            while (scan.hasNextLine()){</span>
+<span class="fc" id="L705">                String contents = scan.nextLine();</span>
+<span class="fc" id="L706">                mapOrin.add(contents);</span>
+                
+<span class="fc" id="L708">            }</span>
+<span class="fc" id="L709">            int y = 64;</span>
+<span class="fc" id="L710">            int x = 0;</span>
+<span class="fc bfc" id="L711" title="All 2 branches covered.">            while (y &lt; 224){</span>
+<span class="fc bfc" id="L712" title="All 2 branches covered.">                while (x &lt; 480){</span>
+<span class="fc" id="L713">                    mapInverseObstacle.put((String.valueOf(x)+String.valueOf(y)),&quot;empty&quot;);</span>
+<span class="fc" id="L714">                    empty.add(new Empty(x , y , emptyImage));</span>
+<span class="fc" id="L715">                    x += 32;</span>
+                }
+<span class="fc" id="L717">                y+= 32;</span>
+<span class="fc" id="L718">                x = 0;</span>
+            }
+<span class="fc" id="L720">            int initialX = 0;</span>
+<span class="fc" id="L721">            int initialY = 224;</span>
+<span class="fc" id="L722">            int wallCounter = 0;</span>
+<span class="fc" id="L723">            int BrokenCounter = 0;</span>
+<span class="fc bfc" id="L724" title="All 2 branches covered.">            for (String each: mapOrin){</span>
+<span class="fc bfc" id="L725" title="All 2 branches covered.">                for (int i = 0; i &lt; each.length(); i ++){</span>
+<span class="fc bfc" id="L726" title="All 2 branches covered.">                    if ((String.valueOf(each.charAt(i))).equals(&quot;W&quot;)){</span>
+
+<span class="fc" id="L728">                        solid.add(new Solid(initialX , initialY , wallImage));</span>
+<span class="fc" id="L729">                        mapObstacle.put(&quot;solid&quot;+wallCounter,(String.valueOf(initialX)+String.valueOf(initialY)));</span>
+<span class="fc" id="L730">                        mapInverseObstacle.put((String.valueOf(initialX)+String.valueOf(initialY)),&quot;solid&quot;);</span>
+<span class="fc" id="L731">                        wallCounter ++;</span>
+<span class="fc bfc" id="L732" title="All 2 branches covered.">                    }else if ((String.valueOf(each.charAt(i))).equals(&quot;B&quot;)){</span>
+                        
+<span class="fc" id="L734">                        broken.add(new Broken(initialX , initialY , brokenImage));</span>
+<span class="fc" id="L735">                        mapObstacle.put(&quot;broken&quot;+BrokenCounter,(String.valueOf(initialX)+String.valueOf(initialY))); </span>
+<span class="fc" id="L736">                        mapInverseObstacle.put((String.valueOf(initialX)+String.valueOf(initialY)),&quot;broken&quot;);</span>
+<span class="fc" id="L737">                        BrokenCounter ++;</span>
+<span class="fc bfc" id="L738" title="All 2 branches covered.">                    }else if ((String.valueOf(each.charAt(i))).equals(&quot; &quot;)){</span>
+<span class="fc" id="L739">                        mapInverseObstacle.put((String.valueOf(initialX)+String.valueOf(initialY)),&quot;empty&quot;);</span>
+<span class="fc" id="L740">                        empty.add(new Empty(initialX , initialY , emptyImage)); </span>
+
+<span class="fc bfc" id="L742" title="All 2 branches covered.">                    }else if ((String.valueOf(each.charAt(i))).equals(&quot;G&quot;)){</span>
+<span class="fc" id="L743">                        mapInverseObstacle.put((String.valueOf(initialX)+String.valueOf(initialY)),&quot;goal&quot;);</span>
+<span class="fc" id="L744">                        goal.add(new Goal(initialX , initialY , goalImage)); </span>
+<span class="pc bpc" id="L745" title="1 of 2 branches missed.">                    }else if ((String.valueOf(each.charAt(i))).equals(&quot;P&quot;)){</span>
+<span class="fc" id="L746">                        mapInverseObstacle.put((String.valueOf(initialX)+String.valueOf(initialY)),&quot;player&quot;);</span>
+<span class="fc" id="L747">                        empty.add(new Empty(initialX , initialY , emptyImage));</span>
+<span class="fc" id="L748">                        playerX = initialX;</span>
+<span class="fc" id="L749">                        playerY = initialY;</span>
+<span class="fc" id="L750">                        player = new Player(playerX, playerY, downImage.get(0), dropBomb);</span>
+                    }
+                        
+<span class="fc" id="L753">                    initialX += 32;</span>
+                }
+<span class="fc" id="L755">                initialX = 0; </span>
+<span class="fc" id="L756">                initialY += 32;</span>
+<span class="fc" id="L757">                facingDirection = &quot;D&quot;;</span>
+<span class="fc" id="L758">                redTimeCounter = 0;</span>
+<span class="fc" id="L759">                yellowTimeCounter = 0;</span>
+<span class="fc" id="L760">                yellowMoveTime = 0;</span>
+<span class="fc" id="L761">                moveTime = 0;</span>
+<span class="fc" id="L762">                levelOneTime = levelTwoTime;</span>
+<span class="fc" id="L763">            }</span>
+           
+<span class="nc" id="L765">        } catch (FileNotFoundException e) {</span>
+<span class="nc" id="L766">            System.out.println(&quot;No such file exist.&quot;);</span>
+<span class="fc" id="L767">        }</span>
+<span class="fc" id="L768">    }</span>
+
+
+
+    public static void main(String[] args) { 
+<span class="nc" id="L773">        PApplet.main(&quot;demolition.App&quot;);</span>
+
+        
+        
+         
+<span class="nc" id="L778">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

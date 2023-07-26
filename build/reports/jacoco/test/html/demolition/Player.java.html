@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Player.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Demolition</a> &gt; <a href="index.source.html" class="el_package">demolition</a> &gt; <span class="el_source">Player.java</span></div><h1>Player.java</h1><pre class="source lang-java linenums">package demolition;
+
+import processing.core.PApplet;
+import processing.core.PImage;
+
+public class Player implements PlayerLife{
+    protected int x;
+    protected int y;
+    protected PImage sprite;
+    protected boolean isAlive;
+    protected int moveSpeed;
+    public static String direction; 
+<span class="fc" id="L13">    protected int timeCounter = 0;</span>
+    private int playerLife;
+
+    public void setPlayerLife(int playerLife) {
+<span class="nc" id="L17">        this.playerLife = playerLife;</span>
+<span class="nc" id="L18">    }</span>
+
+<span class="fc" id="L20">    public Player(int x, int y, PImage sprite, Bomb dropBomb){</span>
+<span class="fc" id="L21">        this.x = x;</span>
+<span class="fc" id="L22">        this.y = y;</span>
+<span class="fc" id="L23">        this.sprite = sprite;</span>
+<span class="fc" id="L24">        this.moveSpeed = 32;</span>
+<span class="fc" id="L25">        this.isAlive = true;</span>
+<span class="fc" id="L26">        this.playerLife = App.lives;</span>
+<span class="fc" id="L27">    }</span>
+
+    public void tick(){
+<span class="fc bfc" id="L30" title="All 2 branches covered.">        if (Player.direction == &quot;D&quot;){</span>
+<span class="fc bfc" id="L31" title="All 2 branches covered.">            for (String each: App.mapObstacle.values()){</span>
+<span class="pc bpc" id="L32" title="1 of 2 branches missed.">                if ((String.valueOf(this.x)+String.valueOf(this.y + moveSpeed)).equals(each)){</span>
+<span class="nc" id="L33">                    return;</span>
+                }
+<span class="fc" id="L35">            }</span>
+<span class="fc" id="L36">            this.y += moveSpeed;</span>
+        }
+<span class="fc bfc" id="L38" title="All 2 branches covered.">        if (Player.direction == &quot;U&quot;){</span>
+<span class="fc bfc" id="L39" title="All 2 branches covered.">            for (String each: App.mapObstacle.values()){</span>
+<span class="pc bpc" id="L40" title="1 of 2 branches missed.">                if ((String.valueOf(this.x)+String.valueOf(this.y - moveSpeed)).equals(each)){</span>
+<span class="nc" id="L41">                    return;</span>
+                }
+<span class="fc" id="L43">            }</span>
+<span class="fc" id="L44">            this.y -= moveSpeed;</span>
+        }
+<span class="fc bfc" id="L46" title="All 2 branches covered.">        if (Player.direction == &quot;R&quot;){</span>
+<span class="fc bfc" id="L47" title="All 2 branches covered.">            for (String each: App.mapObstacle.values()){</span>
+<span class="pc bpc" id="L48" title="1 of 2 branches missed.">                if ((String.valueOf(this.x + moveSpeed)+String.valueOf(this.y)).equals(each)){</span>
+<span class="nc" id="L49">                    return;</span>
+                }
+<span class="fc" id="L51">            }</span>
+<span class="fc" id="L52">            this.x += moveSpeed;</span>
+        }
+<span class="fc bfc" id="L54" title="All 2 branches covered.">        if (Player.direction == &quot;L&quot;){</span>
+<span class="fc bfc" id="L55" title="All 2 branches covered.">            for (String each: App.mapObstacle.values()){</span>
+<span class="pc bpc" id="L56" title="1 of 2 branches missed.">                if ((String.valueOf(this.x - moveSpeed)+String.valueOf(this.y)).equals(each)){</span>
+<span class="nc" id="L57">                    return;</span>
+                }
+<span class="fc" id="L59">            }</span>
+<span class="fc" id="L60">            this.x -= moveSpeed;</span>
+        }
+<span class="fc" id="L62">    }</span>
+
+    public void draw(PApplet app){
+<span class="pc bpc" id="L65" title="1 of 2 branches missed.">        if (this.isAlive()){</span>
+<span class="fc" id="L66">            app.image(this.sprite, this.x, this.y-getHeight()/2+8);</span>
+        }
+        
+<span class="fc" id="L69">    }</span>
+
+    public void checkCollision(){
+<span class="pc bpc" id="L72" title="3 of 4 branches missed.">        if ((String.valueOf(this.x)+String.valueOf(this.y)).equals(String.valueOf(App.redEnemy.getX())+String.valueOf(App.redEnemy.getY())) &amp;&amp; App.redEnemy.isAlive()){</span>
+<span class="nc" id="L73">            App.lives --;</span>
+<span class="nc" id="L74">            App.restart();</span>
+<span class="pc bpc" id="L75" title="3 of 4 branches missed.">        }else if((String.valueOf(this.x)+String.valueOf(this.y)).equals(String.valueOf(App.yellowEnemy.getX())+String.valueOf(App.yellowEnemy.getY()))&amp;&amp; App.yellowEnemy.isAlive()){</span>
+<span class="nc" id="L76">            App.lives --;</span>
+<span class="nc" id="L77">            App.restart();</span>
+        }
+<span class="fc" id="L79">    }</span>
+
+
+    public void faceWallCheck(){
+
+<span class="nc" id="L84">    }</span>
+
+    public int getX() {
+<span class="fc" id="L87">        return x;</span>
+    }
+
+    public void setX(int x) {
+<span class="fc" id="L91">        this.x = x;</span>
+<span class="fc" id="L92">    }</span>
+
+    public int getY() {
+<span class="fc" id="L95">        return y;</span>
+    }
+
+    public void setY(int y) {
+<span class="fc" id="L99">        this.y = y;</span>
+<span class="fc" id="L100">    }</span>
+
+    public PImage getSprite() {
+<span class="nc" id="L103">        return sprite;</span>
+    }
+
+    public void setSprite(PImage sprite) {
+<span class="fc" id="L107">        this.sprite = sprite;</span>
+<span class="fc" id="L108">    }</span>
+
+    public boolean isAlive() {
+<span class="fc" id="L111">        return isAlive;</span>
+    }
+
+    public void setAlive(boolean isAlive) {
+<span class="nc" id="L115">        this.isAlive = isAlive;</span>
+<span class="nc" id="L116">    }</span>
+
+    public int getHeight(){
+<span class="fc" id="L119">        return this.sprite.height;</span>
+    }
+
+    public int getWidth(){
+<span class="nc" id="L123">        return this.sprite.width;</span>
+    }
+
+    public void reducePlayerLife(){
+<span class="nc" id="L127">        this.playerLife --;</span>
+<span class="nc" id="L128">    }</span>
+
+    public int getPlayerLife() {
+<span class="fc" id="L131">        return playerLife;</span>
+    }
+
+    public int getMoveSpeed(){
+<span class="fc" id="L135">        return moveSpeed;</span>
+    }
+
+    
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

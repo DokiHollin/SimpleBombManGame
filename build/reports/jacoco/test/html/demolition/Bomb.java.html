@@ -1,0 +1,696 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Bomb.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Demolition</a> &gt; <a href="index.source.html" class="el_package">demolition</a> &gt; <span class="el_source">Bomb.java</span></div><h1>Bomb.java</h1><pre class="source lang-java linenums">package demolition;
+
+import processing.core.PApplet;
+import processing.core.PImage;
+
+public class Bomb extends PApplet{
+    private int x;
+    private int y;
+    private PImage sprite;
+<span class="fc" id="L10">    private int bombState = 0;</span>
+    private boolean isFinished;
+    private int timeCounter;
+    private int explosionTime;
+    private boolean close;
+<span class="fc" id="L15">    private boolean leftOneHitted = false;</span>
+    private boolean isSolid;
+
+<span class="fc" id="L18">    private boolean leftTwoHitted = false;</span>
+    private boolean left2isSolid;
+<span class="fc" id="L20">    private int leftAccessCounter = 0;</span>
+
+<span class="fc" id="L22">    private boolean rightOneHitted = false;</span>
+    private boolean right1isSolid;
+<span class="fc" id="L24">    private int rightAccessCounter = 0;</span>
+
+<span class="fc" id="L26">    private boolean rightTwoHitted = false;</span>
+    private boolean right2isSolid;
+
+<span class="fc" id="L29">    private boolean downOneHitted = false;</span>
+    private boolean down1isSolid;
+<span class="fc" id="L31">    private int downAccessCounter = 0;</span>
+
+<span class="fc" id="L33">    private boolean downTwoHitted = false;</span>
+    private boolean down2isSolid;
+
+<span class="fc" id="L36">    private boolean upOneHitted = false;</span>
+    private boolean up1isSolid;
+<span class="fc" id="L38">    private int upAccessCounter = 0;</span>
+
+<span class="fc" id="L40">    private boolean upTwoHitted = false;</span>
+    private boolean up2isSolid;
+
+<span class="fc" id="L43">    private int playerOnExplosionCenterCounter = 0;</span>
+<span class="fc" id="L44">    private int enemyOnExplosionCenterCounter = 0;</span>
+<span class="fc" id="L45">    private int yellowOnExplosionCenterCounter = 0;</span>
+
+
+<span class="fc" id="L48">    public Bomb(int x, int y, PImage sprite){</span>
+<span class="fc" id="L49">        this.x = x;</span>
+<span class="fc" id="L50">        this.y = y;</span>
+<span class="fc" id="L51">        this.sprite = sprite;</span>
+<span class="fc" id="L52">        this.isFinished = false;</span>
+<span class="fc" id="L53">        this.timeCounter = 0;</span>
+<span class="fc" id="L54">        this.explosionTime = 0;</span>
+<span class="fc" id="L55">        this.close = false;</span>
+<span class="fc" id="L56">    }</span>
+
+    public void tick(){
+<span class="pc bpc" id="L59" title="1 of 2 branches missed.">        if (!isFinished){</span>
+<span class="fc bfc" id="L60" title="All 2 branches covered.">            if (bombState == 8){</span>
+<span class="fc" id="L61">                isFinished = true;</span>
+            }else{
+<span class="fc bfc" id="L63" title="All 2 branches covered.">                if (timeCounter &gt; 60*0.25){</span>
+<span class="fc" id="L64">                    sprite = App.bombImage.get(bombState);</span>
+<span class="fc" id="L65">                    bombState ++;</span>
+<span class="fc" id="L66">                    timeCounter = 0;</span>
+                }   
+            }
+    
+<span class="fc" id="L70">            timeCounter ++;</span>
+        }
+        
+<span class="fc" id="L73">    }</span>
+
+    public void draw(PApplet app){
+<span class="fc bfc" id="L76" title="All 2 branches covered.">        if (!isFinished){</span>
+<span class="fc" id="L77">            app.image(this.sprite, this.x, this.y);</span>
+        } 
+        else{
+<span class="pc bpc" id="L80" title="1 of 2 branches missed.">            if (!close){</span>
+<span class="fc bfc" id="L81" title="All 2 branches covered.">                if(explosionTime &lt; 60*0.5){</span>
+<span class="fc" id="L82">                    app.image(App.explosionImage.get(0), this.x, this.y);//centre</span>
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">                    if((String.valueOf(this.x)+String.valueOf(this.y)).equals(String.valueOf(App.player.getX())+String.valueOf(App.player.getY()))){</span>
+<span class="nc bnc" id="L84" title="All 2 branches missed.">                        if (playerOnExplosionCenterCounter == 0){</span>
+<span class="nc" id="L85">                            hitOnPlayer();</span>
+<span class="nc" id="L86">                            return;</span>
+                              
+                        }    
+                    }
+<span class="fc bfc" id="L90" title="All 2 branches covered.">                    if((String.valueOf(this.x - 32)+String.valueOf(this.y)).equals(String.valueOf(App.player.getX())+String.valueOf(App.player.getY()))){</span>
+<span class="pc bpc" id="L91" title="1 of 2 branches missed.">                        if (playerOnExplosionCenterCounter == 0){</span>
+<span class="fc" id="L92">                            hitOnPlayer(); </span>
+<span class="fc" id="L93">                            return;</span>
+                              
+                        }
+                    }
+<span class="pc bpc" id="L97" title="1 of 4 branches missed.">                    if((String.valueOf(this.x - 64)+String.valueOf(this.y)).equals(String.valueOf(App.player.getX())+String.valueOf(App.player.getY())) &amp;&amp; App.mapInverseObstacle.get(String.valueOf(this.x - 32)+String.valueOf(this.y)).equals(&quot;empty&quot;)){</span>
+<span class="pc bpc" id="L98" title="1 of 2 branches missed.">                        if (playerOnExplosionCenterCounter == 0){</span>
+<span class="fc" id="L99">                            hitOnPlayer(); </span>
+<span class="fc" id="L100">                            return; </span>
+                        }
+                    }
+<span class="fc bfc" id="L103" title="All 2 branches covered.">                    if((String.valueOf(this.x + 32)+String.valueOf(this.y)).equals(String.valueOf(App.player.getX())+String.valueOf(App.player.getY()))){</span>
+<span class="pc bpc" id="L104" title="1 of 2 branches missed.">                        if (playerOnExplosionCenterCounter == 0){</span>
+<span class="fc" id="L105">                            hitOnPlayer();  </span>
+<span class="fc" id="L106">                            return;</span>
+                        }
+                    }
+<span class="pc bpc" id="L109" title="1 of 4 branches missed.">                    if((String.valueOf(this.x + 64)+String.valueOf(this.y)).equals(String.valueOf(App.player.getX())+String.valueOf(App.player.getY())) &amp;&amp; App.mapInverseObstacle.get(String.valueOf(this.x + 32)+String.valueOf(this.y)).equals(&quot;empty&quot;)){</span>
+<span class="pc bpc" id="L110" title="1 of 2 branches missed.">                        if (playerOnExplosionCenterCounter == 0){</span>
+<span class="fc" id="L111">                            hitOnPlayer();</span>
+<span class="fc" id="L112">                            return;</span>
+  
+                        }
+                    }
+<span class="pc bpc" id="L116" title="1 of 2 branches missed.">                    if((String.valueOf(this.x)+String.valueOf(this.y - 32)).equals(String.valueOf(App.player.getX())+String.valueOf(App.player.getY()))){</span>
+<span class="nc bnc" id="L117" title="All 2 branches missed.">                        if (playerOnExplosionCenterCounter == 0){</span>
+<span class="nc" id="L118">                            hitOnPlayer();  </span>
+<span class="nc" id="L119">                            return;</span>
+                        }
+                    }
+<span class="pc bpc" id="L122" title="1 of 4 branches missed.">                    if((String.valueOf(this.x)+String.valueOf(this.y - 64)).equals(String.valueOf(App.player.getX())+String.valueOf(App.player.getY())) &amp;&amp; App.mapInverseObstacle.get(String.valueOf(this.x)+String.valueOf(this.y - 32)).equals(&quot;empty&quot;)){</span>
+<span class="pc bpc" id="L123" title="1 of 2 branches missed.">                        if (playerOnExplosionCenterCounter == 0){</span>
+<span class="fc" id="L124">                            hitOnPlayer();  </span>
+<span class="fc" id="L125">                            return; </span>
+                        }
+                    }
+<span class="fc bfc" id="L128" title="All 2 branches covered.">                    if((String.valueOf(this.x)+String.valueOf(this.y + 32)).equals(String.valueOf(App.player.getX())+String.valueOf(App.player.getY()))){</span>
+<span class="pc bpc" id="L129" title="1 of 2 branches missed.">                        if (playerOnExplosionCenterCounter == 0){</span>
+<span class="fc" id="L130">                            hitOnPlayer();   </span>
+<span class="fc" id="L131">                            return; </span>
+                        }
+                    }
+<span class="pc bpc" id="L134" title="3 of 4 branches missed.">                    if((String.valueOf(this.x)+String.valueOf(this.y + 64)).equals(String.valueOf(App.player.getX())+String.valueOf(App.player.getY())) &amp;&amp; App.mapInverseObstacle.get(String.valueOf(this.x)+String.valueOf(this.y + 32)).equals(&quot;empty&quot;)){</span>
+<span class="nc bnc" id="L135" title="All 2 branches missed.">                        if (playerOnExplosionCenterCounter == 0){</span>
+<span class="nc" id="L136">                            hitOnPlayer();  </span>
+<span class="nc" id="L137">                            return;  </span>
+                        }
+                    }
+//-----------------------------------------------------------------------------------------------------------------------------------------------
+<span class="pc bpc" id="L141" title="1 of 2 branches missed.">                    if (App.redExist){   </span>
+<span class="fc bfc" id="L142" title="All 2 branches covered.">                        if((String.valueOf(this.x)+String.valueOf(this.y)).equals(String.valueOf(App.redEnemy.getX())+String.valueOf(App.redEnemy.getY()))){</span>
+<span class="pc bpc" id="L143" title="1 of 2 branches missed.">                            if (enemyOnExplosionCenterCounter == 0){</span>
+<span class="fc" id="L144">                                App.redEnemy.dead(); </span>
+<span class="fc" id="L145">                                enemyOnExplosionCenterCounter ++;    </span>
+                            }    
+                        }
+<span class="fc bfc" id="L148" title="All 2 branches covered.">                        if((String.valueOf(this.x - 32)+String.valueOf(this.y)).equals(String.valueOf(App.redEnemy.getX())+String.valueOf(App.redEnemy.getY()))){</span>
+<span class="fc bfc" id="L149" title="All 2 branches covered.">                            if (enemyOnExplosionCenterCounter == 0){</span>
+<span class="fc" id="L150">                                App.redEnemy.dead(); </span>
+<span class="fc" id="L151">                                enemyOnExplosionCenterCounter ++;    </span>
+                            }
+                        }
+<span class="pc bpc" id="L154" title="3 of 4 branches missed.">                        if((String.valueOf(this.x - 64)+String.valueOf(this.y)).equals(String.valueOf(App.redEnemy.getX())+String.valueOf(App.redEnemy.getY())) &amp;&amp; App.mapInverseObstacle.get(String.valueOf(this.x - 32)+String.valueOf(this.y)).equals(&quot;empty&quot;)){</span>
+<span class="nc bnc" id="L155" title="All 2 branches missed.">                            if (enemyOnExplosionCenterCounter == 0){</span>
+<span class="nc" id="L156">                                App.redEnemy.dead(); </span>
+<span class="nc" id="L157">                                enemyOnExplosionCenterCounter ++;    </span>
+                            }
+                        }
+<span class="fc bfc" id="L160" title="All 2 branches covered.">                        if((String.valueOf(this.x + 32)+String.valueOf(this.y)).equals(String.valueOf(App.redEnemy.getX())+String.valueOf(App.redEnemy.getY()))){</span>
+<span class="fc bfc" id="L161" title="All 2 branches covered.">                            if (enemyOnExplosionCenterCounter == 0){</span>
+<span class="fc" id="L162">                                App.redEnemy.dead(); </span>
+<span class="fc" id="L163">                                enemyOnExplosionCenterCounter ++;    </span>
+                            }
+                        }
+<span class="pc bpc" id="L166" title="1 of 4 branches missed.">                        if((String.valueOf(this.x + 64)+String.valueOf(this.y)).equals(String.valueOf(App.redEnemy.getX())+String.valueOf(App.redEnemy.getY())) &amp;&amp; App.mapInverseObstacle.get(String.valueOf(this.x + 32)+String.valueOf(this.y)).equals(&quot;empty&quot;)){</span>
+<span class="fc bfc" id="L167" title="All 2 branches covered.">                            if (enemyOnExplosionCenterCounter == 0){</span>
+<span class="fc" id="L168">                                App.redEnemy.dead(); </span>
+<span class="fc" id="L169">                                enemyOnExplosionCenterCounter ++;    </span>
+                            }
+                        }
+<span class="fc bfc" id="L172" title="All 2 branches covered.">                        if((String.valueOf(this.x)+String.valueOf(this.y - 32)).equals(String.valueOf(App.redEnemy.getX())+String.valueOf(App.redEnemy.getY()))){</span>
+<span class="pc bpc" id="L173" title="1 of 2 branches missed.">                            if (enemyOnExplosionCenterCounter == 0){</span>
+<span class="fc" id="L174">                                App.redEnemy.dead(); </span>
+<span class="fc" id="L175">                                enemyOnExplosionCenterCounter ++;    </span>
+                            }
+                        }
+<span class="pc bpc" id="L178" title="1 of 4 branches missed.">                        if((String.valueOf(this.x)+String.valueOf(this.y - 64)).equals(String.valueOf(App.redEnemy.getX())+String.valueOf(App.redEnemy.getY())) &amp;&amp; App.mapInverseObstacle.get(String.valueOf(this.x)+String.valueOf(this.y - 32)).equals(&quot;empty&quot;)){</span>
+<span class="pc bpc" id="L179" title="1 of 2 branches missed.">                            if (enemyOnExplosionCenterCounter == 0){</span>
+<span class="fc" id="L180">                                App.redEnemy.dead(); </span>
+<span class="fc" id="L181">                                enemyOnExplosionCenterCounter ++;    </span>
+                            }
+                        }
+<span class="fc bfc" id="L184" title="All 2 branches covered.">                        if((String.valueOf(this.x)+String.valueOf(this.y + 32)).equals(String.valueOf(App.redEnemy.getX())+String.valueOf(App.redEnemy.getY()))){</span>
+<span class="fc bfc" id="L185" title="All 2 branches covered.">                            if (enemyOnExplosionCenterCounter == 0){</span>
+<span class="fc" id="L186">                                App.redEnemy.dead(); </span>
+<span class="fc" id="L187">                                enemyOnExplosionCenterCounter ++;    </span>
+                            }
+                        }
+<span class="pc bpc" id="L190" title="3 of 4 branches missed.">                        if((String.valueOf(this.x)+String.valueOf(this.y + 64)).equals(String.valueOf(App.redEnemy.getX())+String.valueOf(App.redEnemy.getY())) &amp;&amp; App.mapInverseObstacle.get(String.valueOf(this.x)+String.valueOf(this.y + 32)).equals(&quot;empty&quot;)){</span>
+<span class="nc bnc" id="L191" title="All 2 branches missed.">                            if (enemyOnExplosionCenterCounter == 0){</span>
+<span class="nc" id="L192">                                App.redEnemy.dead(); </span>
+<span class="nc" id="L193">                                enemyOnExplosionCenterCounter ++;    </span>
+                            }
+                        }
+                    }
+//-----------------------------------------------------------------------------------------------------------------------------------------------
+<span class="pc bpc" id="L198" title="1 of 2 branches missed.">                    if (App.yellowExist){   </span>
+<span class="fc bfc" id="L199" title="All 2 branches covered.">                        if((String.valueOf(this.x)+String.valueOf(this.y)).equals(String.valueOf(App.yellowEnemy.getX())+String.valueOf(App.yellowEnemy.getY()))){</span>
+<span class="pc bpc" id="L200" title="1 of 2 branches missed.">                            if (yellowOnExplosionCenterCounter == 0){</span>
+<span class="fc" id="L201">                                App.yellowEnemy.dead(); </span>
+<span class="fc" id="L202">                                yellowOnExplosionCenterCounter ++;    </span>
+                            }    
+                        }
+<span class="fc bfc" id="L205" title="All 2 branches covered.">                        if((String.valueOf(this.x - 32)+String.valueOf(this.y)).equals(String.valueOf(App.yellowEnemy.getX())+String.valueOf(App.yellowEnemy.getY()))){</span>
+<span class="fc bfc" id="L206" title="All 2 branches covered.">                            if (yellowOnExplosionCenterCounter == 0){</span>
+<span class="fc" id="L207">                                App.yellowEnemy.dead(); </span>
+<span class="fc" id="L208">                                yellowOnExplosionCenterCounter ++;    </span>
+                            }
+                        }
+<span class="pc bpc" id="L211" title="3 of 4 branches missed.">                        if((String.valueOf(this.x - 64)+String.valueOf(this.y)).equals(String.valueOf(App.yellowEnemy.getX())+String.valueOf(App.yellowEnemy.getY())) &amp;&amp; App.mapInverseObstacle.get(String.valueOf(this.x - 32)+String.valueOf(this.y)).equals(&quot;empty&quot;)){</span>
+<span class="nc bnc" id="L212" title="All 2 branches missed.">                            if (yellowOnExplosionCenterCounter == 0){</span>
+<span class="nc" id="L213">                                App.yellowEnemy.dead(); </span>
+<span class="nc" id="L214">                                yellowOnExplosionCenterCounter ++;    </span>
+                            }
+                        }
+<span class="fc bfc" id="L217" title="All 2 branches covered.">                        if((String.valueOf(this.x + 32)+String.valueOf(this.y)).equals(String.valueOf(App.yellowEnemy.getX())+String.valueOf(App.yellowEnemy.getY()))){</span>
+<span class="fc bfc" id="L218" title="All 2 branches covered.">                            if (yellowOnExplosionCenterCounter == 0){</span>
+<span class="fc" id="L219">                                App.yellowEnemy.dead(); </span>
+<span class="fc" id="L220">                                yellowOnExplosionCenterCounter ++;    </span>
+                            }
+                        }
+<span class="pc bpc" id="L223" title="1 of 4 branches missed.">                        if((String.valueOf(this.x + 64)+String.valueOf(this.y)).equals(String.valueOf(App.yellowEnemy.getX())+String.valueOf(App.yellowEnemy.getY())) &amp;&amp; App.mapInverseObstacle.get(String.valueOf(this.x + 32)+String.valueOf(this.y)).equals(&quot;empty&quot;)){</span>
+<span class="fc bfc" id="L224" title="All 2 branches covered.">                            if (yellowOnExplosionCenterCounter == 0){</span>
+<span class="fc" id="L225">                                App.yellowEnemy.dead(); </span>
+<span class="fc" id="L226">                                yellowOnExplosionCenterCounter ++;    </span>
+                            }
+                        }
+<span class="pc bpc" id="L229" title="1 of 2 branches missed.">                        if((String.valueOf(this.x)+String.valueOf(this.y - 32)).equals(String.valueOf(App.yellowEnemy.getX())+String.valueOf(App.yellowEnemy.getY()))){</span>
+<span class="nc bnc" id="L230" title="All 2 branches missed.">                            if (yellowOnExplosionCenterCounter == 0){</span>
+<span class="nc" id="L231">                                App.yellowEnemy.dead(); </span>
+<span class="nc" id="L232">                                yellowOnExplosionCenterCounter ++;    </span>
+                            }
+                        }
+<span class="pc bpc" id="L235" title="1 of 4 branches missed.">                        if((String.valueOf(this.x)+String.valueOf(this.y - 64)).equals(String.valueOf(App.yellowEnemy.getX())+String.valueOf(App.yellowEnemy.getY())) &amp;&amp; App.mapInverseObstacle.get(String.valueOf(this.x)+String.valueOf(this.y - 32)).equals(&quot;empty&quot;)){</span>
+<span class="fc bfc" id="L236" title="All 2 branches covered.">                            if (yellowOnExplosionCenterCounter == 0){</span>
+<span class="fc" id="L237">                                App.yellowEnemy.dead(); </span>
+<span class="fc" id="L238">                                yellowOnExplosionCenterCounter ++;    </span>
+                            }
+                        }
+<span class="fc bfc" id="L241" title="All 2 branches covered.">                        if((String.valueOf(this.x)+String.valueOf(this.y + 32)).equals(String.valueOf(App.yellowEnemy.getX())+String.valueOf(App.yellowEnemy.getY()))){</span>
+<span class="fc bfc" id="L242" title="All 2 branches covered.">                            if (yellowOnExplosionCenterCounter == 0){</span>
+<span class="fc" id="L243">                                App.yellowEnemy.dead(); </span>
+<span class="fc" id="L244">                                yellowOnExplosionCenterCounter ++;    </span>
+                            }
+                        }
+<span class="pc bpc" id="L247" title="3 of 4 branches missed.">                        if((String.valueOf(this.x)+String.valueOf(this.y + 64)).equals(String.valueOf(App.yellowEnemy.getX())+String.valueOf(App.yellowEnemy.getY())) &amp;&amp; App.mapInverseObstacle.get(String.valueOf(this.x)+String.valueOf(this.y + 32)).equals(&quot;empty&quot;)){</span>
+<span class="nc bnc" id="L248" title="All 2 branches missed.">                            if (yellowOnExplosionCenterCounter == 0){</span>
+<span class="nc" id="L249">                                App.yellowEnemy.dead(); </span>
+<span class="nc" id="L250">                                yellowOnExplosionCenterCounter ++;    </span>
+                            }
+                        }
+                    }
+//-------------------------------------------------------------------------------------------------------------------------------------
+<span class="fc bfc" id="L255" title="All 2 branches covered.">                    if (leftAccessCounter == 0){</span>
+<span class="fc bfc" id="L256" title="All 2 branches covered.">                        for (String each: App.mapObstacle.keySet()){</span>
+<span class="fc bfc" id="L257" title="All 2 branches covered.">                            if ((String.valueOf(this.x - 32)+String.valueOf(this.y)).equals(App.mapObstacle.get(each))){ //horizontal left</span>
+<span class="fc" id="L258">                                leftAccessCounter ++;</span>
+<span class="fc" id="L259">                                leftOneHitted = true;</span>
+<span class="fc bfc" id="L260" title="All 2 branches covered.">                                if (String.valueOf(each.charAt(0)).equals(&quot;b&quot;)){</span>
+<span class="fc" id="L261">                                    isSolid = false;</span>
+<span class="fc" id="L262">                                    int temp = 0;</span>
+<span class="fc" id="L263">                                    int temp1 = 0;</span>
+<span class="pc bpc" id="L264" title="1 of 2 branches missed.">                                    for(Broken eachBroken: App.broken){</span>
+<span class="fc bfc" id="L265" title="All 2 branches covered.">                                        if ((String.valueOf(eachBroken.getX())+String.valueOf(eachBroken.getY())).equals((String.valueOf(this.x - 32)+String.valueOf(this.y)))){</span>
+<span class="fc" id="L266">                                            temp1 ++;    </span>
+<span class="fc" id="L267">                                            break;    </span>
+                                        }
+                                        else{
+<span class="fc" id="L270">                                            temp ++;</span>
+                                        }
+<span class="fc" id="L272">                                    }</span>
+<span class="pc bpc" id="L273" title="1 of 2 branches missed.">                                    if (temp1 != 0){</span>
+<span class="fc" id="L274">                                        App.broken.remove(temp);</span>
+<span class="fc" id="L275">                                        App.empty.add(new Empty(this.x - 32 , this.y , App.emptyImage));</span>
+<span class="fc" id="L276">                                        App.mapObstacle.remove(each);</span>
+<span class="fc" id="L277">                                        App.mapInverseObstacle.remove((String.valueOf(this.x - 32)+String.valueOf(this.y)));</span>
+<span class="fc" id="L278">                                        App.mapInverseObstacle.put((String.valueOf(this.x - 32)+String.valueOf(this.y)), &quot;empty&quot;);</span>
+<span class="fc" id="L279">                                        break;  </span>
+                                    }
+                                    
+<span class="nc" id="L282">                                }else{</span>
+<span class="fc" id="L283">                                    isSolid = true;</span>
+<span class="fc" id="L284">                                    break;</span>
+                                }
+                            }
+                            
+<span class="fc" id="L288">                        }</span>
+<span class="fc bfc" id="L289" title="All 2 branches covered.">                        for (String each: App.mapObstacle.keySet()){  </span>
+<span class="fc bfc" id="L290" title="All 2 branches covered.">                            if (!leftOneHitted){</span>
+<span class="fc" id="L291">                                leftAccessCounter ++;</span>
+                                // System.out.println(&quot;left1 no obstacle&quot;);
+<span class="fc bfc" id="L293" title="All 2 branches covered.">                                if ((String.valueOf(this.x - 64)+String.valueOf(this.y)).equals(App.mapObstacle.get(each))){ //horizontal left2</span>
+<span class="fc" id="L294">                                    leftTwoHitted = true;</span>
+<span class="pc bpc" id="L295" title="1 of 2 branches missed.">                                    if (String.valueOf(each.charAt(0)).equals(&quot;b&quot;)){</span>
+<span class="fc" id="L296">                                        left2isSolid = false;</span>
+<span class="fc" id="L297">                                        int temp = 0;</span>
+<span class="fc" id="L298">                                        int temp1 = 0;</span>
+<span class="pc bpc" id="L299" title="1 of 2 branches missed.">                                        for(Broken eachBroken: App.broken){</span>
+<span class="fc bfc" id="L300" title="All 2 branches covered.">                                            if ((String.valueOf(eachBroken.getX())+String.valueOf(eachBroken.getY())).equals((String.valueOf(this.x - 64)+String.valueOf(this.y)))){</span>
+<span class="fc" id="L301">                                                temp1 ++;    </span>
+<span class="fc" id="L302">                                                break;    </span>
+                                            }
+                                            else{
+<span class="fc" id="L305">                                                temp ++;</span>
+                                            }
+<span class="fc" id="L307">                                        }</span>
+<span class="pc bpc" id="L308" title="1 of 2 branches missed.">                                        if (temp1 != 0){</span>
+<span class="fc" id="L309">                                            App.broken.remove(temp);</span>
+<span class="fc" id="L310">                                            App.empty.add(new Empty(this.x - 64 , this.y , App.emptyImage));</span>
+<span class="fc" id="L311">                                            App.mapObstacle.remove(each);</span>
+<span class="fc" id="L312">                                            App.mapInverseObstacle.remove((String.valueOf(this.x - 64)+String.valueOf(this.y)));</span>
+<span class="fc" id="L313">                                            App.mapInverseObstacle.put((String.valueOf(this.x - 64)+String.valueOf(this.y)), &quot;empty&quot;);</span>
+<span class="fc" id="L314">                                            break;  </span>
+                                        }
+                                        
+<span class="nc" id="L317">                                    }else{</span>
+<span class="nc" id="L318">                                        left2isSolid = true;</span>
+<span class="nc" id="L319">                                        break;</span>
+                                    }
+        
+                                }
+                               
+                            }
+<span class="fc" id="L325">                        }</span>
+                        
+                    }
+<span class="fc bfc" id="L328" title="All 2 branches covered.">                    if (rightAccessCounter == 0){</span>
+<span class="fc bfc" id="L329" title="All 2 branches covered.">                        for (String each: App.mapObstacle.keySet()){</span>
+<span class="fc bfc" id="L330" title="All 2 branches covered.">                            if ((String.valueOf(this.x + 32)+String.valueOf(this.y)).equals(App.mapObstacle.get(each))){ //horizontal right</span>
+<span class="fc" id="L331">                                rightAccessCounter ++;</span>
+<span class="fc" id="L332">                                rightOneHitted = true;</span>
+<span class="fc bfc" id="L333" title="All 2 branches covered.">                                if (String.valueOf(each.charAt(0)).equals(&quot;b&quot;)){</span>
+<span class="fc" id="L334">                                    right1isSolid = false;</span>
+<span class="fc" id="L335">                                    int temp = 0;</span>
+<span class="fc" id="L336">                                    int temp1 = 0;</span>
+<span class="pc bpc" id="L337" title="1 of 2 branches missed.">                                    for(Broken eachBroken: App.broken){</span>
+<span class="fc bfc" id="L338" title="All 2 branches covered.">                                        if ((String.valueOf(eachBroken.getX())+String.valueOf(eachBroken.getY())).equals((String.valueOf(this.x + 32)+String.valueOf(this.y)))){</span>
+<span class="fc" id="L339">                                            temp1 ++;    </span>
+<span class="fc" id="L340">                                            break;    </span>
+                                        }
+                                        else{
+<span class="fc" id="L343">                                            temp ++;</span>
+                                        }
+<span class="fc" id="L345">                                    }</span>
+<span class="pc bpc" id="L346" title="1 of 2 branches missed.">                                    if (temp1 != 0){</span>
+<span class="fc" id="L347">                                        App.broken.remove(temp);</span>
+<span class="fc" id="L348">                                        App.empty.add(new Empty(this.x + 32 , this.y , App.emptyImage));</span>
+<span class="fc" id="L349">                                        App.mapObstacle.remove(each);</span>
+<span class="fc" id="L350">                                        App.mapInverseObstacle.remove((String.valueOf(this.x + 32)+String.valueOf(this.y)));</span>
+<span class="fc" id="L351">                                        App.mapInverseObstacle.put((String.valueOf(this.x + 32)+String.valueOf(this.y)), &quot;empty&quot;);</span>
+<span class="fc" id="L352">                                        break;  </span>
+                                    }
+                                    
+<span class="nc" id="L355">                                }else{</span>
+<span class="fc" id="L356">                                    right1isSolid = true;</span>
+<span class="fc" id="L357">                                    break;</span>
+                                }
+                            } 
+                            
+<span class="fc" id="L361">                        }</span>
+<span class="fc bfc" id="L362" title="All 2 branches covered.">                        for (String each: App.mapObstacle.keySet()){  </span>
+<span class="fc bfc" id="L363" title="All 2 branches covered.">                            if (!rightOneHitted){</span>
+<span class="fc" id="L364">                                rightAccessCounter ++;</span>
+                                // System.out.println(&quot;right1 no obstacle&quot;);
+<span class="fc bfc" id="L366" title="All 2 branches covered.">                                if ((String.valueOf(this.x + 64)+String.valueOf(this.y)).equals(App.mapObstacle.get(each))){ //horizontal right2</span>
+<span class="fc" id="L367">                                    rightTwoHitted = true;</span>
+<span class="fc bfc" id="L368" title="All 2 branches covered.">                                    if (String.valueOf(each.charAt(0)).equals(&quot;b&quot;)){</span>
+<span class="fc" id="L369">                                        right2isSolid = false;</span>
+<span class="fc" id="L370">                                        int temp = 0;</span>
+<span class="fc" id="L371">                                        int temp1 = 0;</span>
+<span class="pc bpc" id="L372" title="1 of 2 branches missed.">                                        for(Broken eachBroken: App.broken){</span>
+<span class="pc bpc" id="L373" title="1 of 2 branches missed.">                                            if ((String.valueOf(eachBroken.getX())+String.valueOf(eachBroken.getY())).equals((String.valueOf(this.x + 64)+String.valueOf(this.y)))){</span>
+<span class="fc" id="L374">                                                temp1 ++;    </span>
+<span class="fc" id="L375">                                                break;    </span>
+                                            }
+                                            else{
+<span class="nc" id="L378">                                                temp ++;</span>
+                                            }
+<span class="nc" id="L380">                                        }</span>
+<span class="pc bpc" id="L381" title="1 of 2 branches missed.">                                        if (temp1 != 0){</span>
+<span class="fc" id="L382">                                            App.broken.remove(temp);</span>
+<span class="fc" id="L383">                                            App.empty.add(new Empty(this.x + 64 , this.y , App.emptyImage));</span>
+<span class="fc" id="L384">                                            App.mapObstacle.remove(each);</span>
+<span class="fc" id="L385">                                            App.mapInverseObstacle.remove((String.valueOf(this.x + 64)+String.valueOf(this.y)));</span>
+<span class="fc" id="L386">                                            App.mapInverseObstacle.put((String.valueOf(this.x + 64)+String.valueOf(this.y)), &quot;empty&quot;);</span>
+<span class="fc" id="L387">                                            break;  </span>
+                                        }
+                                        
+<span class="nc" id="L390">                                    }else{</span>
+<span class="fc" id="L391">                                        right2isSolid = true;</span>
+<span class="fc" id="L392">                                        break;</span>
+                                    }
+        
+                                }
+                                
+                            }
+<span class="fc" id="L398">                        }</span>
+                        
+                    }
+
+<span class="fc bfc" id="L402" title="All 2 branches covered.">                    if (upAccessCounter == 0){</span>
+<span class="fc bfc" id="L403" title="All 2 branches covered.">                        for (String each: App.mapObstacle.keySet()){</span>
+<span class="fc bfc" id="L404" title="All 2 branches covered.">                            if ((String.valueOf(this.x)+String.valueOf(this.y - 32)).equals(App.mapObstacle.get(each))){ //vertical up</span>
+<span class="fc" id="L405">                                upAccessCounter ++;</span>
+<span class="fc" id="L406">                                upOneHitted = true;</span>
+<span class="fc bfc" id="L407" title="All 2 branches covered.">                                if (String.valueOf(each.charAt(0)).equals(&quot;b&quot;)){</span>
+<span class="fc" id="L408">                                    up1isSolid = false;</span>
+<span class="fc" id="L409">                                    int temp = 0;</span>
+<span class="fc" id="L410">                                    int temp1 = 0;</span>
+<span class="pc bpc" id="L411" title="1 of 2 branches missed.">                                    for(Broken eachBroken: App.broken){</span>
+<span class="fc bfc" id="L412" title="All 2 branches covered.">                                        if ((String.valueOf(eachBroken.getX())+String.valueOf(eachBroken.getY())).equals((String.valueOf(this.x)+String.valueOf(this.y-32)))){</span>
+<span class="fc" id="L413">                                            temp1 ++;    </span>
+<span class="fc" id="L414">                                            break;    </span>
+                                        }
+                                        else{
+<span class="fc" id="L417">                                            temp ++;</span>
+                                        }
+<span class="fc" id="L419">                                    }</span>
+<span class="pc bpc" id="L420" title="1 of 2 branches missed.">                                    if (temp1 != 0){</span>
+<span class="fc" id="L421">                                        App.broken.remove(temp);</span>
+<span class="fc" id="L422">                                        App.empty.add(new Empty(this.x, this.y - 32 , App.emptyImage));</span>
+<span class="fc" id="L423">                                        App.mapObstacle.remove(each);</span>
+<span class="fc" id="L424">                                        App.mapInverseObstacle.remove((String.valueOf(this.x)+String.valueOf(this.y - 32)));</span>
+<span class="fc" id="L425">                                        App.mapInverseObstacle.put((String.valueOf(this.x)+String.valueOf(this.y - 32)), &quot;empty&quot;);</span>
+<span class="fc" id="L426">                                        break;  </span>
+                                    }
+                                    
+<span class="nc" id="L429">                                }else{</span>
+<span class="fc" id="L430">                                    up1isSolid = true;</span>
+<span class="fc" id="L431">                                    break;</span>
+                                }
+                            }
+                            
+                            
+<span class="fc" id="L436">                        }</span>
+<span class="fc bfc" id="L437" title="All 2 branches covered.">                        for (String each: App.mapObstacle.keySet()){  </span>
+<span class="fc bfc" id="L438" title="All 2 branches covered.">                            if (!upOneHitted){</span>
+<span class="fc" id="L439">                                upAccessCounter ++;</span>
+                                // System.out.println(&quot;right1 no obstacle&quot;);
+<span class="fc bfc" id="L441" title="All 2 branches covered.">                                if ((String.valueOf(this.x)+String.valueOf(this.y - 64)).equals(App.mapObstacle.get(each))){ //vertical up2</span>
+<span class="fc" id="L442">                                    upTwoHitted = true;</span>
+<span class="fc bfc" id="L443" title="All 2 branches covered.">                                    if (String.valueOf(each.charAt(0)).equals(&quot;b&quot;)){</span>
+<span class="fc" id="L444">                                        up2isSolid = false;</span>
+<span class="fc" id="L445">                                        int temp = 0;</span>
+<span class="fc" id="L446">                                        int temp1 = 0;</span>
+<span class="pc bpc" id="L447" title="1 of 2 branches missed.">                                        for(Broken eachBroken: App.broken){</span>
+<span class="fc bfc" id="L448" title="All 2 branches covered.">                                            if ((String.valueOf(eachBroken.getX())+String.valueOf(eachBroken.getY())).equals((String.valueOf(this.x)+String.valueOf(this.y - 64)))){</span>
+<span class="fc" id="L449">                                                temp1 ++;    </span>
+<span class="fc" id="L450">                                                break;    </span>
+                                            }
+                                            else{
+<span class="fc" id="L453">                                                temp ++;</span>
+                                            }
+<span class="fc" id="L455">                                        }</span>
+<span class="pc bpc" id="L456" title="1 of 2 branches missed.">                                        if (temp1 != 0){</span>
+<span class="fc" id="L457">                                            App.broken.remove(temp);</span>
+<span class="fc" id="L458">                                            App.empty.add(new Empty(this.x, this.y -64 , App.emptyImage));</span>
+<span class="fc" id="L459">                                            App.mapObstacle.remove(each);</span>
+<span class="fc" id="L460">                                            App.mapInverseObstacle.remove((String.valueOf(this.x)+String.valueOf(this.y - 64)));</span>
+<span class="fc" id="L461">                                            App.mapInverseObstacle.put((String.valueOf(this.x)+String.valueOf(this.y - 64)), &quot;empty&quot;);</span>
+<span class="fc" id="L462">                                            break;  </span>
+                                        }
+                                        
+<span class="nc" id="L465">                                    }else{</span>
+<span class="fc" id="L466">                                        up2isSolid = true;</span>
+<span class="fc" id="L467">                                        break;</span>
+                                    }
+        
+                                }
+                            
+                            }
+<span class="fc" id="L473">                        }</span>
+                        
+                    }
+
+<span class="fc bfc" id="L477" title="All 2 branches covered.">                    if (downAccessCounter == 0){</span>
+<span class="fc bfc" id="L478" title="All 2 branches covered.">                        for (String each: App.mapObstacle.keySet()){</span>
+<span class="fc bfc" id="L479" title="All 2 branches covered.">                            if ((String.valueOf(this.x)+String.valueOf(this.y + 32)).equals(App.mapObstacle.get(each))){ //vertical down</span>
+<span class="fc" id="L480">                                downAccessCounter ++;</span>
+<span class="fc" id="L481">                                downOneHitted = true;</span>
+<span class="fc bfc" id="L482" title="All 2 branches covered.">                                if (String.valueOf(each.charAt(0)).equals(&quot;b&quot;)){</span>
+<span class="fc" id="L483">                                    down1isSolid = false;</span>
+<span class="fc" id="L484">                                    int temp = 0;</span>
+<span class="fc" id="L485">                                    int temp1 = 0;</span>
+<span class="pc bpc" id="L486" title="1 of 2 branches missed.">                                    for(Broken eachBroken: App.broken){</span>
+<span class="fc bfc" id="L487" title="All 2 branches covered.">                                        if ((String.valueOf(eachBroken.getX())+String.valueOf(eachBroken.getY())).equals((String.valueOf(this.x)+String.valueOf(this.y+32)))){</span>
+<span class="fc" id="L488">                                            temp1 ++;    </span>
+<span class="fc" id="L489">                                            break;    </span>
+                                        }
+                                        else{
+<span class="fc" id="L492">                                            temp ++;</span>
+                                        }
+<span class="fc" id="L494">                                    }</span>
+<span class="pc bpc" id="L495" title="1 of 2 branches missed.">                                    if (temp1 != 0){</span>
+<span class="fc" id="L496">                                        App.broken.remove(temp);</span>
+<span class="fc" id="L497">                                        App.empty.add(new Empty(this.x, this.y + 32 , App.emptyImage));</span>
+<span class="fc" id="L498">                                        App.mapObstacle.remove(each);</span>
+<span class="fc" id="L499">                                        App.mapInverseObstacle.remove((String.valueOf(this.x)+String.valueOf(this.y + 32)));</span>
+<span class="fc" id="L500">                                        App.mapInverseObstacle.put((String.valueOf(this.x)+String.valueOf(this.y + 32)), &quot;empty&quot;);</span>
+<span class="fc" id="L501">                                        break;  </span>
+                                    }
+                                    
+<span class="nc" id="L504">                                }else{</span>
+<span class="fc" id="L505">                                    down1isSolid = true;</span>
+<span class="fc" id="L506">                                    break;</span>
+                                }
+                            }
+                            
+<span class="fc" id="L510">                        }</span>
+<span class="fc bfc" id="L511" title="All 2 branches covered.">                        for (String each: App.mapObstacle.keySet()){  </span>
+<span class="fc bfc" id="L512" title="All 2 branches covered.">                            if (!downOneHitted){</span>
+<span class="fc" id="L513">                                downAccessCounter ++;</span>
+<span class="fc bfc" id="L514" title="All 2 branches covered.">                                if ((String.valueOf(this.x)+String.valueOf(this.y + 64)).equals(App.mapObstacle.get(each))){ //vertical down2</span>
+<span class="fc" id="L515">                                    downTwoHitted = true;</span>
+<span class="pc bpc" id="L516" title="1 of 2 branches missed.">                                    if (String.valueOf(each.charAt(0)).equals(&quot;b&quot;)){</span>
+<span class="fc" id="L517">                                        down2isSolid = false;</span>
+<span class="fc" id="L518">                                        int temp = 0;</span>
+<span class="fc" id="L519">                                        int temp1 = 0;</span>
+<span class="pc bpc" id="L520" title="1 of 2 branches missed.">                                        for(Broken eachBroken: App.broken){</span>
+<span class="fc bfc" id="L521" title="All 2 branches covered.">                                            if ((String.valueOf(eachBroken.getX())+String.valueOf(eachBroken.getY())).equals((String.valueOf(this.x)+String.valueOf(this.y + 64)))){</span>
+<span class="fc" id="L522">                                                temp1 ++;    </span>
+<span class="fc" id="L523">                                                break;    </span>
+                                            }
+                                            else{
+<span class="fc" id="L526">                                                temp ++;</span>
+                                            }
+<span class="fc" id="L528">                                        }</span>
+<span class="pc bpc" id="L529" title="1 of 2 branches missed.">                                        if (temp1 != 0){</span>
+<span class="fc" id="L530">                                            App.broken.remove(temp);</span>
+<span class="fc" id="L531">                                            App.empty.add(new Empty(this.x, this.y + 64 , App.emptyImage));</span>
+<span class="fc" id="L532">                                            App.mapObstacle.remove(each);</span>
+<span class="fc" id="L533">                                            App.mapInverseObstacle.remove((String.valueOf(this.x)+String.valueOf(this.y + 64)));</span>
+<span class="fc" id="L534">                                            App.mapInverseObstacle.put((String.valueOf(this.x)+String.valueOf(this.y + 64)), &quot;empty&quot;);</span>
+<span class="fc" id="L535">                                            break;  </span>
+                                        }
+                                        
+<span class="nc" id="L538">                                    }else{</span>
+<span class="nc" id="L539">                                        down2isSolid = true;</span>
+<span class="nc" id="L540">                                        break;</span>
+                                    }
+        
+                                }
+                                
+                            }
+<span class="fc" id="L546">                        }</span>
+                        
+                    }
+                    
+                    
+<span class="fc bfc" id="L551" title="All 2 branches covered.">                    if (leftOneHitted){</span>
+<span class="fc bfc" id="L552" title="All 2 branches covered.">                        if (!isSolid){</span>
+<span class="fc" id="L553">                            app.image(App.explosionImage.get(1), this.x-32, this.y); //horizontal left    </span>
+                        }
+<span class="fc bfc" id="L555" title="All 2 branches covered.">                    }else if (!leftTwoHitted){</span>
+<span class="fc" id="L556">                        app.image(App.explosionImage.get(1), this.x-32, this.y); //horizontal left</span>
+<span class="fc" id="L557">                        app.image(App.explosionImage.get(4), this.x-64, this.y); //end left</span>
+                    }
+
+<span class="fc bfc" id="L560" title="All 4 branches covered.">                    if(!leftOneHitted &amp;&amp; leftTwoHitted){</span>
+<span class="pc bpc" id="L561" title="1 of 2 branches missed.">                        if (!left2isSolid){</span>
+<span class="fc" id="L562">                            app.image(App.explosionImage.get(4), this.x-64, this.y); //end left</span>
+<span class="fc" id="L563">                            app.image(App.explosionImage.get(1), this.x-32, this.y); //horizontal left    </span>
+                        }else{
+<span class="nc" id="L565">                            app.image(App.explosionImage.get(1), this.x-32, this.y); //horizontal left</span>
+                        }     
+                    }
+
+<span class="fc bfc" id="L569" title="All 2 branches covered.">                    if (rightOneHitted){</span>
+<span class="fc bfc" id="L570" title="All 2 branches covered.">                        if (!right1isSolid){</span>
+<span class="fc" id="L571">                            app.image(App.explosionImage.get(1), this.x+32, this.y); //horizontal right   </span>
+                        }
+<span class="fc bfc" id="L573" title="All 2 branches covered.">                    }else if (!rightTwoHitted){</span>
+<span class="fc" id="L574">                        app.image(App.explosionImage.get(1), this.x+32, this.y); //horizontal right</span>
+<span class="fc" id="L575">                        app.image(App.explosionImage.get(5), this.x+64, this.y); //end right</span>
+                    }
+
+<span class="fc bfc" id="L578" title="All 4 branches covered.">                    if(!rightOneHitted &amp;&amp; rightTwoHitted){</span>
+<span class="fc bfc" id="L579" title="All 2 branches covered.">                        if (!right2isSolid){</span>
+<span class="fc" id="L580">                            app.image(App.explosionImage.get(5), this.x+64, this.y); //end right</span>
+<span class="fc" id="L581">                            app.image(App.explosionImage.get(1), this.x+32, this.y); //horizontal right    </span>
+                        }else{
+<span class="fc" id="L583">                            app.image(App.explosionImage.get(1), this.x+32, this.y); //horizontal right</span>
+                        }     
+                    }
+
+<span class="fc bfc" id="L587" title="All 2 branches covered.">                    if (upOneHitted){</span>
+<span class="fc bfc" id="L588" title="All 2 branches covered.">                        if (!up1isSolid){</span>
+<span class="fc" id="L589">                            app.image(App.explosionImage.get(2), this.x, this.y - 32); //vertical up    </span>
+                        }
+<span class="fc bfc" id="L591" title="All 2 branches covered.">                    }else if (!upTwoHitted){</span>
+<span class="fc" id="L592">                        app.image(App.explosionImage.get(2), this.x, this.y-32); //vertical up</span>
+<span class="fc" id="L593">                        app.image(App.explosionImage.get(6), this.x, this.y-64); //end up</span>
+                    }
+
+<span class="fc bfc" id="L596" title="All 4 branches covered.">                    if(!upOneHitted &amp;&amp; upTwoHitted){</span>
+<span class="fc bfc" id="L597" title="All 2 branches covered.">                        if (!up2isSolid){</span>
+<span class="fc" id="L598">                            app.image(App.explosionImage.get(6), this.x, this.y-64); //end up</span>
+<span class="fc" id="L599">                            app.image(App.explosionImage.get(2), this.x, this.y-32); //vertical up   </span>
+                        }else{
+<span class="fc" id="L601">                            app.image(App.explosionImage.get(2), this.x, this.y-32); //vertical up</span>
+                        }     
+                    }
+
+<span class="fc bfc" id="L605" title="All 2 branches covered.">                    if (downOneHitted){</span>
+<span class="fc bfc" id="L606" title="All 2 branches covered.">                        if (!down1isSolid){</span>
+<span class="fc" id="L607">                            app.image(App.explosionImage.get(2), this.x, this.y + 32); //vertical down    </span>
+                        }
+<span class="fc bfc" id="L609" title="All 2 branches covered.">                    }else if (!downTwoHitted){</span>
+<span class="fc" id="L610">                        app.image(App.explosionImage.get(2), this.x, this.y+32); //vertical down</span>
+<span class="fc" id="L611">                        app.image(App.explosionImage.get(3), this.x, this.y+64); //end down</span>
+                    }
+
+<span class="fc bfc" id="L614" title="All 4 branches covered.">                    if(!downOneHitted &amp;&amp; downTwoHitted){</span>
+<span class="pc bpc" id="L615" title="1 of 2 branches missed.">                        if (!down2isSolid){</span>
+<span class="fc" id="L616">                            app.image(App.explosionImage.get(3), this.x, this.y+64); //end down</span>
+<span class="fc" id="L617">                            app.image(App.explosionImage.get(2), this.x, this.y+32); //vertical down   </span>
+                        }else{
+<span class="nc" id="L619">                            app.image(App.explosionImage.get(2), this.x, this.y+32); //vertical down</span>
+                        }     
+                    }
+
+                    // app.image(App.explosionImage.get(0), this.x, this.y);//centre
+                    // app.image(App.explosionImage.get(1), this.x-32, this.y); //horizontal left
+                    // app.image(App.explosionImage.get(1), this.x+32, this.y); //horizontal right
+                    // app.image(App.explosionImage.get(2), this.x, this.y-32); //vertical up
+                    // app.image(App.explosionImage.get(2), this.x, this.y+32); //vertical down
+                    // app.image(App.explosionImage.get(3), this.x, this.y+64); //end bottom
+                    // app.image(App.explosionImage.get(4), this.x-64, this.y); //end left
+                    // app.image(App.explosionImage.get(5), this.x+64, this.y); //end right
+                    // app.image(App.explosionImage.get(6), this.x, this.y-64); //end top
+<span class="fc" id="L632">                    explosionTime ++;    </span>
+                }else{
+<span class="fc" id="L634">                    close = true;</span>
+<span class="fc" id="L635">                    playerOnExplosionCenterCounter = 0;</span>
+<span class="fc" id="L636">                    return;</span>
+                    
+                }     
+            }
+            
+               
+        }
+        
+            
+<span class="fc" id="L645">    }</span>
+
+    public void setImage(PImage sprite){
+<span class="fc" id="L648">        this.sprite = sprite;</span>
+<span class="fc" id="L649">    }</span>
+    
+    public void setX(int x){
+<span class="fc" id="L652">        this.x = x;</span>
+<span class="fc" id="L653">    }</span>
+
+    public void setY(int y){
+<span class="fc" id="L656">        this.y = y;</span>
+<span class="fc" id="L657">    }</span>
+
+    public int getX(){
+<span class="fc" id="L660">        return this.x;</span>
+    }
+
+    public int getY(){
+<span class="fc" id="L664">        return this.y;</span>
+    }
+
+    public int bombCurrentState(){
+<span class="fc" id="L668">        return bombState;</span>
+    }
+
+    public void setFinished(){
+<span class="fc" id="L672">        this.isFinished = true;</span>
+<span class="fc" id="L673">    }</span>
+
+    public boolean isFinishedBomb(){
+<span class="fc" id="L676">        return this.isFinished;</span>
+    }
+
+    public boolean close(){
+<span class="fc" id="L680">        return this.close;</span>
+    }
+    
+    public void hitOnPlayer(){
+<span class="fc" id="L684">        App.lives --;</span>
+<span class="fc" id="L685">        explosionTime = 100;</span>
+<span class="pc bpc" id="L686" title="1 of 2 branches missed.">        if (!App.levelOnePass){</span>
+<span class="fc" id="L687">            App.restart();</span>
+        }else{
+<span class="nc" id="L689">            App.secondLevel();</span>
+        }
+        
+<span class="fc" id="L692">        playerOnExplosionCenterCounter ++;</span>
+<span class="fc" id="L693">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
